@@ -1,0 +1,8 @@
+# AWS SDK for Python
+boto3>=1.34.0
+
+# JSON handling and utilities
+requests>=2.31.0
+
+# For data processing
+python-dateutil>=2.8.2

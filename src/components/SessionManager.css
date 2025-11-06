@@ -1,0 +1,227 @@
+.session-manager {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.session-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-indicator.loading {
+  background-color: #ffa500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-indicator.error {
+  background-color: #ff4757;
+}
+
+.status-indicator.unauthenticated {
+  background-color: #747d8c;
+}
+
+.status-indicator.authenticated {
+  background-color: #2ed573;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-text {
+  color: #333;
+  font-weight: 500;
+}
+
+.session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.summoner-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.summoner-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.summoner-region {
+  font-size: 12px;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.session-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.session-expiry {
+  display: flex;
+  gap: 4px;
+}
+
+.expiry-label {
+  font-weight: 500;
+}
+
+.expiry-time {
+  color: #e67e22;
+  font-weight: 600;
+}
+
+.session-preferences {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pref-label {
+  font-weight: 500;
+}
+
+.pref-value {
+  color: #34495e;
+  font-weight: 600;
+}
+
+.logout-btn, .clear-error-btn {
+  background: none;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #7f8c8d;
+}
+
+.logout-btn:hover {
+  background-color: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
+}
+
+.clear-error-btn {
+  padding: 2px 6px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.clear-error-btn:hover {
+  background-color: #95a5a6;
+  border-color: #95a5a6;
+  color: white;
+}
+
+/* Theme variations */
+.session-manager.loading {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+}
+
+.session-manager.error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.session-manager.unauthenticated {
+  background-color: #e2e3e5;
+  border: 1px solid #d6d8db;
+}
+
+.session-manager.authenticated {
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+}
+
+/* Compact version */
+.session-manager.compact {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.session-manager.compact .session-details {
+  display: none;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .session-manager {
+    color: #e9ecef;
+  }
+  
+  .status-text {
+    color: #e9ecef;
+  }
+  
+  .summoner-name {
+    color: #f8f9fa;
+  }
+  
+  .summoner-region {
+    color: #adb5bd;
+  }
+  
+  .session-details {
+    color: #adb5bd;
+  }
+  
+  .pref-value {
+    color: #dee2e6;
+  }
+  
+  .logout-btn, .clear-error-btn {
+    border-color: #6c757d;
+    color: #adb5bd;
+  }
+  
+  .session-manager.loading {
+    background-color: #664d03;
+    border-color: #997404;
+  }
+  
+  .session-manager.error {
+    background-color: #842029;
+    border-color: #b02a37;
+  }
+  
+  .session-manager.unauthenticated {
+    background-color: #495057;
+    border-color: #6c757d;
+  }
+  
+  .session-manager.authenticated {
+    background-color: #055160;
+    border-color: #0a6e7c;
+  }
+}

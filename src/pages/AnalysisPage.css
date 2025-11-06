@@ -1,0 +1,178 @@
+.analysis-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h2 {
+  color: #c89b3c;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.page-header p {
+  color: #cdbe91;
+  font-size: 1.2rem;
+}
+
+.current-summoner {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.current-summoner .session-manager {
+  max-width: 500px;
+}
+
+.no-session-notice {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(120, 90, 40, 0.2);
+  border: 1px solid #785a28;
+  border-radius: 6px;
+}
+
+.no-session-notice p {
+  margin: 0;
+  color: #cdbe91;
+  font-size: 1rem;
+}
+
+.no-session-notice a {
+  color: #c89b3c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.no-session-notice a:hover {
+  color: #f0e6d2;
+  text-decoration: underline;
+}
+
+.analysis-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.analysis-card {
+  background-color: #1e2328;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #463714;
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.analysis-card:hover {
+  transform: translateY(-4px);
+  border-color: #c89b3c;
+}
+
+.analysis-card h3 {
+  color: #c89b3c;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.analysis-card p {
+  color: #cdbe91;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature {
+  background-color: #0f1419;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border-left: 3px solid #c89b3c;
+  color: #cdbe91;
+  font-size: 0.9rem;
+}
+
+.status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #463714;
+  color: #785a28;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.analysis-preview {
+  background-color: #1e2328;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #463714;
+}
+
+.analysis-preview h3 {
+  color: #c89b3c;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.preview-content {
+  background-color: #0f1419;
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid #463714;
+}
+
+.mock-analysis h4 {
+  color: #c89b3c;
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.mock-analysis h4:first-child {
+  margin-top: 0;
+}
+
+.mock-analysis p {
+  color: #cdbe91;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.mock-analysis ul {
+  color: #cdbe91;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.mock-analysis li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .page-header h2 {
+    font-size: 2rem;
+  }
+  
+  .analysis-types {
+    grid-template-columns: 1fr;
+  }
+  
+  .analysis-card {
+    min-width: unset;
+  }
+}

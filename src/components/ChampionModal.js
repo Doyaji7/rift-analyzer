@@ -1,0 +1,159 @@
+import React, { useState } from 'react';
+import ChatInterface from './ChatInterface';
+import './ChampionModal.css';
+
+const ChampionModal = ({ champion, isOpen, onClose }) => {
+  const [activeTab, setActiveTab] = useState('info');
+
+  if (!isOpen || !champion) return null;
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="champion-modal">
+        <div className="modal-header">
+          <div className="champion-header-info">
+            <img 
+              src={`https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${champion.image.full}`}
+              alt={champion.name}
+              className="champion-portrait"
+              onError={(e) => {
+                e.target.src = `https://via.placeholder.com/80x80/1e2328/c89b3c?text=${champion.name}`;
+              }}
+            />
+            <div className="champion-title-info">
+              <h2>{champion.name}</h2>
+              <p className="champion-subtitle">{champion.title}</p>
+              <div className="champion-tags">
+                {champion.tags.map((tag, index) => (
+                  <span key={index} className="tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button className="close-button" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+
+        <div className="modal-tabs">
+          <button 
+            className={`tab-button ${activeTab === 'info' ? 'active' : ''}`}
+            onClick={() => setActiveTab('info')}
+          >
+            정보
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'chat' ? 'active' : ''}`}
+            onClick={() => setActiveTab('chat')}
+          >
+            AI 공략
+          </button>
+        </div>
+
+        <div className="modal-content">
+          {activeTab === 'info' && (
+            <>
+              <div className="champion-stats">
+                <h3>기본 스탯</h3>
+                <div className="stats-grid">
+                  <div className="stat-item">
+                    <span className="stat-label">공격력</span>
+                    <div className="stat-bar">
+                      <div 
+                        className="stat-fill" 
+                        style={{ width: `${(champion.info.attack / 10) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span className="stat-value">{champion.info.attack}/10</span>
+                  </div>
+                  
+                  <div className="stat-item">
+                    <span className="stat-label">방어력</span>
+                    <div className="stat-bar">
+                      <div 
+                        className="stat-fill" 
+                        style={{ width: `${(champion.info.defense / 10) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span className="stat-value">{champion.info.defense}/10</span>
+                  </div>
+                  
+                  <div className="stat-item">
+                    <span className="stat-label">마법력</span>
+                    <div className="stat-bar">
+                      <div 
+                        className="stat-fill" 
+                        style={{ width: `${(champion.info.magic / 10) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span className="stat-value">{champion.info.magic}/10</span>
+                  </div>
+                  
+                  <div className="stat-item">
+                    <span className="stat-label">난이도</span>
+                    <div className="stat-bar">
+                      <div 
+                        className="stat-fill difficulty" 
+                        style={{ width: `${(champion.info.difficulty / 10) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span className="stat-value">{champion.info.difficulty}/10</span>
+                  </div>
+                </div>
+              </div>
+
+              {champion.skills && (
+                <div className="champion-skills">
+                  <h3>스킬</h3>
+                  <div className="skills-grid">
+                    {champion.skills.map((skill, index) => (
+                      <div key={index} className="skill-item">
+                        <div className="skill-icon">
+                          <span className="skill-key">{skill.key}</span>
+                        </div>
+                        <div className="skill-info">
+                          <h4>{skill.name}</h4>
+                          <p>{skill.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {champion.lore && (
+                <div className="champion-lore">
+                  <h3>배경 스토리</h3>
+                  <p>{champion.lore}</p>
+                </div>
+              )}
+            </>
+          )}
+
+          {activeTab === 'chat' && (
+            <div className="champion-chat-container">
+              <ChatInterface 
+                contextType="champion"
+                contextData={{
+                  championName: champion.name,
+                  championData: champion
+                }}
+                isGlobal={false}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChampionModal;

@@ -1,0 +1,365 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'LoL Match Analyzer API Gateway with CORS'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    AllowedValues: [dev, staging, prod]
+  DataBucket:
+    Type: String
+    Description: S3 bucket name for data storage
+  LambdaRoleArn:
+    Type: String
+    Description: ARN of the Lambda execution role
+  AgentCoreRuntimeId:
+    Type: String
+    Description: BedrockAgentCore Runtime ID
+  AgentCoreEndpoint:
+    Type: String
+    Description: BedrockAgentCore Runtime endpoint URL
+  KnowledgeBaseId:
+    Type: String
+    Description: Bedrock Knowledge Base ID for LoL data
+
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
+      MaxAge: "'600'"
+
+Resources:
+  LolMatchAnalyzerApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+      DefinitionBody:
+        openapi: 3.0.1
+        info:
+          title: LoL Match Analyzer API
+          version: 1.0.0
+        paths:
+          /api/champions:
+            get:
+              summary: Get all champions
+              responses:
+                '200':
+                  description: List of champions
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChampionDataFunction.Arn}/invocations'
+            options:
+              summary: CORS preflight
+              responses:
+                '200':
+                  description: CORS headers
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+                    Access-Control-Allow-Methods:
+                      schema:
+                        type: string
+                        default: 'GET,POST,OPTIONS'
+                    Access-Control-Allow-Headers:
+                      schema:
+                        type: string
+                        default: 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: 200
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                      method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+
+          /api/champions/{championId}:
+            get:
+              summary: Get specific champion
+              parameters:
+                - name: championId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+              responses:
+                '200':
+                  description: Champion details
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChampionDataFunction.Arn}/invocations'
+
+          /api/summoner/search:
+            post:
+              summary: Search summoner and collect data
+              responses:
+                '200':
+                  description: Summoner data collection initiated
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SummonerSearchFunction.Arn}/invocations'
+
+          /api/summoner/{riotId}/matches:
+            get:
+              summary: Get summoner matches
+              parameters:
+                - name: riotId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+              responses:
+                '200':
+                  description: Match history
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MatchDataFunction.Arn}/invocations'
+
+          /api/summoner/{riotId}/mastery:
+            get:
+              summary: Get summoner mastery
+              parameters:
+                - name: riotId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+              responses:
+                '200':
+                  description: Champion mastery data
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MasteryDataFunction.Arn}/invocations'
+
+          /api/analysis/match:
+            post:
+              summary: Analyze single match
+              responses:
+                '200':
+                  description: Match analysis result
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MatchAnalysisFunction.Arn}/invocations'
+
+          /api/analysis/trend:
+            post:
+              summary: Analyze play trends
+              responses:
+                '200':
+                  description: Trend analysis result
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TrendAnalysisFunction.Arn}/invocations'
+
+          /api/chat:
+            post:
+              summary: AI chatbot interaction
+              responses:
+                '200':
+                  description: AI response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+                        default: '*'
+              x-amazon-apigateway-integration:
+                type: aws_proxy
+                httpMethod: POST
+                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChatbotFunction.Arn}/invocations'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    AllowedValues: [dev, staging, prod]
+  DataBucket:
+    Type: String
+    Description: S3 bucket name for storing data
+  LambdaRoleArn:
+    Type: String
+    Description: IAM role ARN for Lambda functions
+
+Resources:
+  # Placeholder Lambda function references - will be created in later tasks
+  ChampionDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: champion-data-service.lambda_handler
+      Runtime: python3.13
+      Timeout: 30
+      MemorySize: 512
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+      Events:
+        ChampionApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LolMatchAnalyzerApi
+            Path: /api/champions
+            Method: get
+        ChampionDetailApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LolMatchAnalyzerApi
+            Path: /api/champions/{championId}
+            Method: get
+
+  SummonerSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: summoner-search.lambda_handler
+      Runtime: python3.13
+      Timeout: 60
+      MemorySize: 1024
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+
+  MatchDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: match-data.lambda_handler
+      Runtime: python3.13
+      Timeout: 60
+      MemorySize: 1024
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+
+  MasteryDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: mastery-data.lambda_handler
+      Runtime: python3.13
+      Timeout: 30
+      MemorySize: 512
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+
+  MatchAnalysisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: match-analysis.lambda_handler
+      Runtime: python3.13
+      Timeout: 300
+      MemorySize: 2048
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+
+  TrendAnalysisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: trend-analysis.lambda_handler
+      Runtime: python3.13
+      Timeout: 300
+      MemorySize: 2048
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+
+  ChatbotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: agentcore-handler.lambda_handler
+      Runtime: python3.13
+      Timeout: 300
+      MemorySize: 3008
+      Role: !Ref LambdaRoleArn
+      Environment:
+        Variables:
+          DATA_BUCKET: !Ref DataBucket
+          ENVIRONMENT: !Ref Environment
+          LOG_LEVEL: INFO
+          AGENTCORE_RUNTIME_ID: !Ref AgentCoreRuntimeId
+          AGENTCORE_ENDPOINT: !Ref AgentCoreEndpoint
+          KNOWLEDGE_BASE_ID: !Ref KnowledgeBaseId
+
+Outputs:
+  ApiGatewayUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${LolMatchAnalyzerApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
+    Export:
+      Name: !Sub "${AWS::StackName}-ApiUrl"

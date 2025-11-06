@@ -1,0 +1,48 @@
+default_agent: riot_data_analyzer
+agents:
+  riot_data_analyzer:
+    name: riot_data_analyzer
+    entrypoint: /Users/mz01-doyaji7/Code/lol-ai-agent/agentcore-runtime/app.py
+    deployment_type: direct_code_deploy
+    runtime_type: PYTHON_3_13
+    platform: linux/arm64
+    container_runtime: null
+    source_path: /Users/mz01-doyaji7/Code/lol-ai-agent/agentcore-runtime
+    aws:
+      execution_role: arn:aws:iam::661893373836:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-aecee73808
+      execution_role_auto_create: false
+      account: '661893373836'
+      region: us-east-1
+      ecr_repository: null
+      ecr_auto_create: false
+      s3_path: s3://bedrock-agentcore-codebuild-sources-661893373836-us-east-1
+      s3_auto_create: false
+      network_configuration:
+        network_mode: PRIVATE
+        network_mode_config: null
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: false
+      lifecycle_configuration:
+        idle_runtime_session_timeout: null
+        max_lifetime: null
+    bedrock_agentcore:
+      agent_id: riot_data_analyzer-pE01nfE4X0
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:661893373836:runtime/riot_data_analyzer-pE01nfE4X0
+      agent_session_id: null
+    codebuild:
+      project_name: null
+      execution_role: null
+      source_bucket: null
+    memory:
+      mode: STM_ONLY
+      memory_id: null
+      memory_arn: null
+      memory_name: riot_data_analyzer_memory
+      event_expiry_days: 1
+      first_invoke_memory_check_done: false
+      was_created_by_toolkit: false
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
