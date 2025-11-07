@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
-import { SessionContext } from '../contexts/SessionContext';
+import React, { useState, useRef, useEffect } from 'react';
+import { useSession } from '../contexts/SessionContext';
 import './ChatInterface.css';
 
 const ChatInterface = ({ 
@@ -13,7 +13,7 @@ const ChatInterface = ({
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
-  const { session } = useContext(SessionContext);
+  const { session } = useSession();
 
   useEffect(() => {
     // Generate session ID on component mount
@@ -94,32 +94,61 @@ const ChatInterface = ({
   };
 
   const sendChatMessage = async (query) => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://your-api-gateway-url.com';
+    // Import AWS SDK (should be at top of file)
+    const { BedrockAgentCoreClient, InvokeAgentRuntimeCommand } = await import('@aws-sdk/client-bedrock-agentcore');
+    const { fromCognitoIdentityPool } = await import('@aws-sdk/credential-providers');
     
-    const requestBody = {
-      query,
-      sessionId,
-      contextType,
-      contextData: {
+    // Configure AWS client with Cognito credentials
+    const client = new BedrockAgentCoreClient({
+      region: 'us-east-1',
+      credentials: fromCognitoIdentityPool({
+        clientConfig: { region: 'us-east-1' },
+        identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+      }),
+    });
+
+    // Prepare payload
+    const payload = JSON.stringify({
+      prompt: query,
+      contextHandler: contextType,
+      metadata: {
         ...contextData,
         summonerName: session?.summoner?.riotId
       }
-    };
-
-    const response = await fetch(`${apiUrl}/api/chat`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody)
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // Ensure session ID is 33+ characters
+    let runtimeSessionId = sessionId;
+    if (runtimeSessionId.length < 33) {
+      runtimeSessionId = runtimeSessionId + 'x'.repeat(33 - runtimeSessionId.length);
     }
 
-    const data = await response.json();
-    return data.response;
+    const command = new InvokeAgentRuntimeCommand({
+      runtimeSessionId,
+      agentRuntimeArn: process.env.REACT_APP_AGENTCORE_RUNTIME_ARN,
+      payload: new TextEncoder().encode(payload)
+    });
+
+    const response = await client.send(command);
+    
+    // Parse streaming response
+    let responseText = '';
+    if (response.response) {
+      for await (const event of response.response) {
+        if (event.chunk?.bytes) {
+          const chunk = new TextDecoder().decode(event.chunk.bytes);
+          responseText += chunk;
+        }
+      }
+    }
+
+    // Try to parse as JSON, fallback to raw text
+    try {
+      const responseData = JSON.parse(responseText);
+      return responseData.result || responseText;
+    } catch {
+      return responseText;
+    }
   };
 
   const formatMessage = (content) => {
