@@ -9,6 +9,22 @@ Parameters:
 
 Resources:
   # Lambda Functions
+  CollectSummonerDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: collect-summoner-data
+      CodeUri: ../lambda/
+      Handler: collect-summoner-data.lambda_handler
+      Runtime: python3.13
+      Timeout: 60
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RiotAnalyzerApi
+            Path: /summoner/search
+            Method: POST
+
   FetchMatchHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -22,8 +38,8 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref RiotAnalyzerApi
-            Path: /match-history
-            Method: POST
+            Path: /summoner/{riotId}/matches
+            Method: GET
 
   FetchChampionMasteryFunction:
     Type: AWS::Serverless::Function
@@ -38,39 +54,7 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref RiotAnalyzerApi
-            Path: /champion-mastery
-            Method: POST
-
-  GetMasteryDataFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: get-mastery-data
-      CodeUri: ../lambda/
-      Handler: get-mastery-data.lambda_handler
-      Runtime: python3.13
-      Timeout: 30
-      Events:
-        Api:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref RiotAnalyzerApi
-            Path: /mastery-data
-            Method: GET
-
-  GetMatchDataFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: get-match-data
-      CodeUri: ../lambda/
-      Handler: get-match-data.lambda_handler
-      Runtime: python3.13
-      Timeout: 30
-      Events:
-        Api:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref RiotAnalyzerApi
-            Path: /match-data
+            Path: /summoner/{riotId}/mastery
             Method: GET
 
   ChampionDataServiceFunction:
@@ -86,7 +70,7 @@ Resources:
           Type: HttpApi
           Properties:
             ApiId: !Ref RiotAnalyzerApi
-            Path: /champion-data
+            Path: /champions
             Method: GET
 
   # HTTP API Gateway

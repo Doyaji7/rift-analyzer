@@ -10,14 +10,14 @@ export const config = {
 
 // API endpoints
 export const endpoints = {
-  champions: '/api/champions',
-  championDetail: (championId) => `/api/champions/${championId}`,
-  summonerSearch: '/api/summoner/search',
-  summonerMatches: (riotId) => `/api/summoner/${encodeURIComponent(riotId)}/matches`,
-  summonerMastery: (riotId) => `/api/summoner/${encodeURIComponent(riotId)}/mastery`,
-  matchAnalysis: '/api/analysis/match',
-  trendAnalysis: '/api/analysis/trend',
-  chat: '/api/chat'
+  champions: '/champions',
+  championDetail: (championId) => `/champions/${championId}`,
+  summonerSearch: '/summoner/search',
+  summonerMatches: (riotId) => `/summoner/${encodeURIComponent(riotId)}/matches`,
+  summonerMastery: (riotId) => `/summoner/${encodeURIComponent(riotId)}/mastery`,
+  matchAnalysis: '/analysis/match',
+  trendAnalysis: '/analysis/trend',
+  chat: '/chat'
 };
 
 // S3 paths for static data
