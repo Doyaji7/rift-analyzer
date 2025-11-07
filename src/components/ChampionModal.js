@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { dataDragon } from '../config/environment';
 import ChatInterface from './ChatInterface';
 import './ChampionModal.css';
 
@@ -19,11 +20,11 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
         <div className="modal-header">
           <div className="champion-header-info">
             <img 
-              src={`https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${champion.image.full}`}
+              src={dataDragon.championImageUrl(dataDragon.version, champion.image.full)}
               alt={champion.name}
               className="champion-portrait"
               onError={(e) => {
-                e.target.src = `https://via.placeholder.com/80x80/1e2328/c89b3c?text=${champion.name}`;
+                e.target.style.display = 'none';
               }}
             />
             <div className="champion-title-info">

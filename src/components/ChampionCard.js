@@ -1,4 +1,5 @@
 import React from 'react';
+import { dataDragon } from '../config/environment';
 import './ChampionCard.css';
 
 const ChampionCard = ({ champion, onClick }) => {
@@ -8,9 +9,9 @@ const ChampionCard = ({ champion, onClick }) => {
     }
   };
 
-  // Create placeholder image URL based on champion name
+  // Get champion image URL from CloudFront
   const getChampionImageUrl = (champion) => {
-    return `https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${champion.image.full}`;
+    return dataDragon.championImageUrl(dataDragon.version, champion.image.full);
   };
 
   return (
@@ -20,7 +21,8 @@ const ChampionCard = ({ champion, onClick }) => {
           src={getChampionImageUrl(champion)} 
           alt={champion.name}
           onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/300x200/1e2328/c89b3c?text=' + champion.name;
+            e.target.style.opacity = '0.3';
+            e.target.alt = `${champion.name} (이미지 로드 실패)`;
           }}
         />
         <div className="champion-overlay">

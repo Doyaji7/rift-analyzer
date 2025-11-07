@@ -4,10 +4,55 @@ const STORAGE_KEY = 'lol_session';
 const TOKEN_PREFIX = 'lol_token_';
 
 /**
+ * Check if localStorage is available
+ * @returns {boolean} True if localStorage is available
+ */
+function isLocalStorageAvailable() {
+  try {
+    const test = '__localStorage_test__';
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    console.error('localStorage is not available:', e);
+    return false;
+  }
+}
+
+/**
+ * Safely encode string to base64 (handles Unicode)
+ * @param {string} str - String to encode
+ * @returns {string} Base64 encoded string
+ */
+function encodeBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  const binString = Array.from(bytes, (byte) => String.fromCodePoint(byte)).join('');
+  return btoa(binString);
+}
+
+/**
+ * Safely decode base64 to string (handles Unicode)
+ * @param {string} base64 - Base64 string to decode
+ * @returns {string} Decoded string
+ */
+function decodeBase64(base64) {
+  const binString = atob(base64);
+  const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+/**
  * Session Service for managing user sessions with JWT tokens
  * Handles session creation, validation, persistence, and expiry
  */
 class SessionService {
+  constructor() {
+    // Check localStorage availability on initialization
+    if (!isLocalStorageAvailable()) {
+      console.warn('localStorage is not available. Session management may not work properly.');
+    }
+  }
+
   /**
    * Create a new session for a summoner
    * @param {Object} summonerData - Summoner information
@@ -18,37 +63,50 @@ class SessionService {
    * @returns {Object} Session data with token
    */
   createSession(summonerData, dataLocations = {}, preferences = {}) {
-    const sessionId = this.generateSessionId();
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + (SESSION_EXPIRY_HOURS * 60 * 60 * 1000));
-    
-    const sessionData = {
-      sessionId,
-      summoner: {
-        riotId: summonerData.riotId,
-        safeName: this.convertToSafeName(summonerData.riotId),
-        region: summonerData.region
-      },
-      dataLocations: {
-        matchHistory: dataLocations.matchHistory || `match-history/${this.convertToSafeName(summonerData.riotId)}/`,
-        mastery: dataLocations.mastery || `mastery-data/${this.convertToSafeName(summonerData.riotId)}/`
-      },
-      preferences: {
-        language: preferences.language || 'ko',
-        theme: preferences.theme || 'dark',
-        ...preferences
-      },
-      createdAt: now.toISOString(),
-      expiresAt: expiresAt.toISOString()
-    };
+    try {
+      console.log('Creating session for:', summonerData);
+      
+      // Validate input
+      if (!summonerData || !summonerData.riotId || !summonerData.region) {
+        throw new Error('Invalid summoner data: riotId and region are required');
+      }
 
-    // Generate simple token
-    const token = this.generateToken(sessionData);
+      const sessionId = this.generateSessionId();
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + (SESSION_EXPIRY_HOURS * 60 * 60 * 1000));
+      
+      const sessionData = {
+        sessionId,
+        summoner: {
+          riotId: summonerData.riotId,
+          safeName: this.convertToSafeName(summonerData.riotId),
+          region: summonerData.region
+        },
+        dataLocations: {
+          matchHistory: dataLocations.matchHistory || `match-history/${this.convertToSafeName(summonerData.riotId)}/`,
+          mastery: dataLocations.mastery || `mastery-data/${this.convertToSafeName(summonerData.riotId)}/`
+        },
+        preferences: {
+          language: preferences.language || 'ko',
+          theme: preferences.theme || 'dark',
+          ...preferences
+        },
+        createdAt: now.toISOString(),
+        expiresAt: expiresAt.toISOString()
+      };
 
-    // Store in localStorage
-    this.saveToStorage({ ...sessionData, token });
+      // Generate simple token
+      const token = this.generateToken(sessionData);
 
-    return { ...sessionData, token };
+      // Store in localStorage
+      this.saveToStorage({ ...sessionData, token });
+
+      console.log('Session created successfully:', sessionId);
+      return { ...sessionData, token };
+    } catch (error) {
+      console.error('Failed to create session:', error);
+      throw error;
+    }
   }
 
   /**
@@ -64,11 +122,12 @@ class SessionService {
 
       // Decode base64 token
       const encodedData = token.substring(TOKEN_PREFIX.length);
-      const decodedString = atob(encodedData);
+      const decodedString = decodeBase64(encodedData);
       const sessionData = JSON.parse(decodedString);
       
       // Check if session is expired
       if (new Date() > new Date(sessionData.expiresAt)) {
+        console.log('Session expired');
         this.clearSession();
         return null;
       }
@@ -196,11 +255,12 @@ class SessionService {
   generateToken(sessionData) {
     try {
       const dataString = JSON.stringify(sessionData);
-      const encodedData = btoa(dataString);
-      return TOKEN_PREFIX + encodedData;
+      const base64 = encodeBase64(dataString);
+      return TOKEN_PREFIX + base64;
     } catch (error) {
       console.error('Failed to generate token:', error);
-      throw new Error('Token generation failed');
+      console.error('Session data:', sessionData);
+      throw new Error('Token generation failed: ' + error.message);
     }
   }
 
@@ -231,9 +291,23 @@ class SessionService {
    */
   saveToStorage(sessionData) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionData));
+      const dataString = JSON.stringify(sessionData);
+      localStorage.setItem(STORAGE_KEY, dataString);
+      console.log('Session saved to localStorage');
     } catch (error) {
       console.error('Failed to save session to localStorage:', error);
+      
+      // Check if localStorage is available
+      if (typeof localStorage === 'undefined') {
+        throw new Error('localStorage is not available');
+      }
+      
+      // Check if quota exceeded
+      if (error.name === 'QuotaExceededError') {
+        throw new Error('localStorage quota exceeded');
+      }
+      
+      throw error;
     }
   }
 }

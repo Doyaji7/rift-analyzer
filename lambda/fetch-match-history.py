@@ -3,6 +3,7 @@ import boto3
 import urllib3
 from urllib.parse import quote
 from datetime import datetime
+from botocore.exceptions import ClientError
 
 def lambda_handler(event, context):
     """
@@ -107,12 +108,42 @@ def lambda_handler(event, context):
         
         # Step 3: Fetch and process each match
         processed_matches = []
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
         for i, match_id in enumerate(match_ids):
             print(f"Processing match {i+1}/{len(match_ids)}: {match_id}")
             
-            # Get full match data
+            # Use match_id as filename (no timestamp) to avoid duplicates
+            full_key = f"match-history/{safe_summoner_name}/full/{match_id}.json"
+            stats_key = f"match-history/{safe_summoner_name}/stats/{match_id}.json"
+            
+            # Check if match already exists in S3 to avoid re-fetching
+            try:
+                s3.head_object(Bucket=bucket_name, Key=full_key)
+                print(f"Match {match_id} already exists, skipping API call")
+                
+                # Load existing stats
+                stats_response = s3.get_object(Bucket=bucket_name, Key=stats_key)
+                player_stats = json.loads(stats_response['Body'].read().decode('utf-8'))
+                
+                processed_matches.append({
+                    'matchId': match_id,
+                    'champion': player_stats.get('championName'),
+                    'kda': f"{player_stats.get('kills', 0)}/{player_stats.get('deaths', 0)}/{player_stats.get('assists', 0)}",
+                    'win': player_stats.get('win'),
+                    'fullDataLocation': full_key,
+                    'statsLocation': stats_key,
+                    'cached': True
+                })
+                continue
+            except ClientError as e:
+                # Match doesn't exist (404), fetch from API
+                if e.response['Error']['Code'] == '404':
+                    print(f"Match {match_id} not found in S3, fetching from API")
+                else:
+                    print(f"S3 error checking match {match_id}: {e}")
+                    continue
+            
+            # Get full match data from Riot API
             match_url = f"https://{routing_value}.api.riotgames.com/lol/match/v5/matches/{match_id}"
             match_response = http.request('GET', match_url, headers=headers)
             
@@ -122,8 +153,7 @@ def lambda_handler(event, context):
             
             match_data = json.loads(match_response.data.decode('utf-8'))
             
-            # Save full match data to S3
-            full_key = f"match-history/{safe_summoner_name}/full/{match_id}_{timestamp}.json"
+            # Save full match data to S3 (overwrites if exists)
             s3.put_object(
                 Bucket=bucket_name,
                 Key=full_key,
@@ -134,8 +164,7 @@ def lambda_handler(event, context):
             # Extract player stats
             player_stats = extract_player_stats(match_data, puuid)
             if player_stats:
-                # Save extracted stats to S3
-                stats_key = f"match-history/{safe_summoner_name}/stats/{match_id}_{timestamp}.json"
+                # Save extracted stats to S3 (overwrites if exists)
                 s3.put_object(
                     Bucket=bucket_name,
                     Key=stats_key,
@@ -149,7 +178,8 @@ def lambda_handler(event, context):
                     'kda': f"{player_stats.get('kills', 0)}/{player_stats.get('deaths', 0)}/{player_stats.get('assists', 0)}",
                     'win': player_stats.get('win'),
                     'fullDataLocation': full_key,
-                    'statsLocation': stats_key
+                    'statsLocation': stats_key,
+                    'cached': False
                 })
         
         return {

@@ -10,8 +10,6 @@ export const config = {
 
 // API endpoints
 export const endpoints = {
-  champions: '/champions',
-  championDetail: (championId) => `/champions/${championId}`,
   summonerSearch: '/summoner/search',
   summonerMatches: (riotId) => `/summoner/${encodeURIComponent(riotId)}/matches`,
   summonerMastery: (riotId) => `/summoner/${encodeURIComponent(riotId)}/mastery`,
@@ -20,9 +18,19 @@ export const endpoints = {
   chat: '/chat'
 };
 
-// S3 paths for static data
-export const s3Paths = {
-  championData: '15.21.1/data/en_US/champion.json',
-  championImages: '15.21.1/img/champion/',
-  championSprites: '15.21.1/img/sprite/'
+// CloudFront CDN for LoL data
+const CLOUDFRONT_URL = process.env.REACT_APP_CLOUDFRONT_URL || 'https://d3niiaajvbtu1l.cloudfront.net/lol-data';
+const LOL_VERSION = process.env.REACT_APP_LOL_VERSION || '15.21.1';
+
+export const dataDragon = {
+  baseUrl: CLOUDFRONT_URL,
+  version: LOL_VERSION,
+  championDataUrl: (version = LOL_VERSION, lang = 'en_US') => 
+    `${CLOUDFRONT_URL}/${version}/data/${lang}/champion.json`,
+  championImageUrl: (version = LOL_VERSION, championImage) => 
+    `${CLOUDFRONT_URL}/${version}/img/champion/${championImage}`,
+  spellImageUrl: (version = LOL_VERSION, spellImage) => 
+    `${CLOUDFRONT_URL}/${version}/img/spell/${spellImage}`,
+  passiveImageUrl: (version = LOL_VERSION, passiveImage) => 
+    `${CLOUDFRONT_URL}/${version}/img/passive/${passiveImage}`
 };

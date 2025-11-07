@@ -103,15 +103,26 @@ const SummonerPage = () => {
       
       // Create session for successful data collection
       if (data.overallStatus === 'complete' || data.overallStatus === 'partial') {
-        // Create session with summoner data
-        const sessionData = createSession(
-          { riotId: trimmedName, region: region },
-          data.dataLocations || {},
-          { language: 'ko', theme: 'dark' }
-        );
-        
-        if (sessionData) {
-          await fetchSummonerData(trimmedName);
+        try {
+          console.log('Creating session with data:', { riotId: trimmedName, region });
+          
+          // Create session with summoner data
+          const sessionData = createSession(
+            { riotId: trimmedName, region: region },
+            data.dataLocations || {},
+            { language: 'ko', theme: 'dark' }
+          );
+          
+          if (sessionData) {
+            console.log('Session created, fetching summoner data');
+            await fetchSummonerData(trimmedName);
+          } else {
+            console.error('Session creation returned null');
+            setError('세션 생성에 실패했습니다. 브라우저 설정을 확인해주세요.');
+          }
+        } catch (sessionError) {
+          console.error('Session creation error:', sessionError);
+          setError('세션 생성 오류: ' + sessionError.message);
         }
       }
       

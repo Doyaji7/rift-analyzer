@@ -123,7 +123,10 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
       <div className="match-actions">
         <button 
           className="analyze-button"
-          onClick={() => setShowAnalysis(!showAnalysis)}
+          onClick={(e) => {
+            e.preventDefault();
+            setShowAnalysis(!showAnalysis);
+          }}
           title="이 게임을 상세 분석합니다"
         >
           {showAnalysis ? '분석 닫기' : 'AI 분석'}
@@ -131,7 +134,10 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
         {onAnalyze && (
           <button 
             className="detail-button"
-            onClick={() => onAnalyze(match)}
+            onClick={(e) => {
+              e.preventDefault();
+              onAnalyze(match);
+            }}
             title="상세 매치 정보를 봅니다"
           >
             상세보기

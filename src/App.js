@@ -4,6 +4,7 @@ import './App.css';
 
 // Import page components
 import HomePage from './pages/HomePage';
+import ChampionsPage from './pages/ChampionsPage';
 import SummonerPage from './pages/SummonerPage';
 import AnalysisPage from './pages/AnalysisPage';
 
@@ -29,6 +30,12 @@ const Navigation = () => {
         className={`nav-link ${isActive('/') ? 'active' : ''}`}
       >
         홈
+      </Link>
+      <Link 
+        to="/champions" 
+        className={`nav-link ${isActive('/champions') ? 'active' : ''}`}
+      >
+        챔피언 정보
       </Link>
       <Link 
         to="/summoner" 
@@ -63,6 +70,7 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/champions" element={<ChampionsPage />} />
               <Route path="/summoner" element={<SummonerPage />} />
               <Route path="/analysis" element={<AnalysisPage />} />
             </Routes>

@@ -274,14 +274,16 @@
     flex-direction: column;
     gap: 0.5rem;
   }
-}/* M
-atch Analysis Container */
+}
+
+/*
+ Match Analysis Container */
 .match-analysis-container {
   margin-top: 16px;
   border-top: 1px solid #463714;
   padding-top: 16px;
-  height: 400px;
-  background: #f8f9fa;
+  height: auto;
+  background: #0f1419;
   border-radius: 8px;
   overflow: hidden;
 }

@@ -35,7 +35,7 @@ const AnalysisPage = () => {
             <span className="feature">팀 기여도 평가</span>
             <span className="feature">개선점 제안</span>
           </div>
-          <div className="status">구현 예정</div>
+          <div className="analysis-status">구현 예정</div>
         </div>
 
         <div className="analysis-card">
@@ -46,7 +46,7 @@ const AnalysisPage = () => {
             <span className="feature">포지션별 성과</span>
             <span className="feature">시간대별 트렌드</span>
           </div>
-          <div className="status">구현 예정</div>
+          <div className="analysis-status">구현 예정</div>
         </div>
       </div>
 

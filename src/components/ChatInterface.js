@@ -30,11 +30,17 @@ const ChatInterface = ({
   }, [contextType]);
 
   useEffect(() => {
-    scrollToBottom();
+    // Only auto-scroll when new messages are added (not on initial mount)
+    if (messages.length > 1) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Use smooth scroll only for new messages, not initial load
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
   };
 
   const getWelcomeMessage = (type) => {
@@ -201,14 +207,12 @@ const ChatInterface = ({
 
   return (
     <div className={`chat-interface ${isGlobal ? 'global-chat' : 'context-chat'}`}>
-      {!isGlobal && (
+      {!isGlobal && onClose && (
         <div className="chat-header">
           <h3>AI 분석 도우미</h3>
-          {onClose && (
-            <button className="close-button" onClick={onClose}>
-              ✕
-            </button>
-          )}
+          <button className="close-button" onClick={onClose}>
+            ✕
+          </button>
         </div>
       )}
 
