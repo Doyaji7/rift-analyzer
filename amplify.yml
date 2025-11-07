@@ -14,3 +14,6 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+  env:
+    variables:
+      REACT_APP_AGENTCORE_RUNTIME_ARN: arn:aws:bedrock-agentcore:us-east-1:661893373836:runtime/riot_data_analyzer-pE01nfE4X0

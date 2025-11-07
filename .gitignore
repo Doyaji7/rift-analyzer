@@ -47,7 +47,7 @@ tmp/
 temp/
 
 # kiro
-.krio/*
+.kiro/
 
 # patch data
 15.*/
@@ -60,6 +60,11 @@ agentcore-runtime-quickstart/
 
 # bedrock agentcore data
 .bedrock_agentcore/
+
+# not-frontend-source
+lambda/
+prompt/
+infrastructure/
 
 # gamedata
 KR_*.json
