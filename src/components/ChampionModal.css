@@ -285,8 +285,9 @@
   .skill-icon {
     align-self: center;
   }
-}/
-* Modal Tabs */
+}
+
+/* Modal Tabs */
 .modal-tabs {
   display: flex;
   border-bottom: 2px solid #463714;
