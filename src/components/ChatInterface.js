@@ -100,61 +100,38 @@ const ChatInterface = ({
   };
 
   const sendChatMessage = async (query) => {
-    // Import AWS SDK (should be at top of file)
-    const { BedrockAgentCoreClient, InvokeAgentRuntimeCommand } = await import('@aws-sdk/client-bedrock-agentcore');
-    const { fromCognitoIdentityPool } = await import('@aws-sdk/credential-providers');
+    const { config, endpoints } = await import('../config/environment');
     
-    // Configure AWS client with Cognito credentials
-    const client = new BedrockAgentCoreClient({
-      region: 'us-east-1',
-      credentials: fromCognitoIdentityPool({
-        clientConfig: { region: 'us-east-1' },
-        identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
-      }),
-    });
-
-    // Prepare payload
-    const payload = JSON.stringify({
-      prompt: query,
-      contextHandler: contextType,
-      metadata: {
-        ...contextData,
-        summonerName: session?.summoner?.riotId
-      }
-    });
-
     // Ensure session ID is 33+ characters
     let runtimeSessionId = sessionId;
     if (runtimeSessionId.length < 33) {
       runtimeSessionId = runtimeSessionId + 'x'.repeat(33 - runtimeSessionId.length);
     }
 
-    const command = new InvokeAgentRuntimeCommand({
-      runtimeSessionId,
-      agentRuntimeArn: process.env.REACT_APP_AGENTCORE_RUNTIME_ARN,
-      payload: new TextEncoder().encode(payload)
+    // Call API Gateway endpoint
+    const response = await fetch(`${config.apiUrl}${endpoints.chat}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        prompt: query,
+        sessionId: runtimeSessionId,
+        contextType: contextType,
+        contextData: {
+          ...contextData,
+          summonerName: session?.summoner?.riotId
+        }
+      })
     });
 
-    const response = await client.send(command);
-    
-    // Parse streaming response
-    let responseText = '';
-    if (response.response) {
-      for await (const event of response.response) {
-        if (event.chunk?.bytes) {
-          const chunk = new TextDecoder().decode(event.chunk.bytes);
-          responseText += chunk;
-        }
-      }
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to get response from AI');
     }
 
-    // Try to parse as JSON, fallback to raw text
-    try {
-      const responseData = JSON.parse(responseText);
-      return responseData.result || responseText;
-    } catch {
-      return responseText;
-    }
+    const data = await response.json();
+    return data.response || data.result || '응답을 받지 못했습니다.';
   };
 
   const formatMessage = (content) => {
