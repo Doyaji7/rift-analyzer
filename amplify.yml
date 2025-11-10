@@ -16,4 +16,7 @@ frontend:
       - node_modules/**/*
   env:
     variables:
+      REACT_APP_API_URL: https://thc2281yqi.execute-api.us-east-1.amazonaws.com/prod
       REACT_APP_AGENTCORE_RUNTIME_ARN: arn:aws:bedrock-agentcore:us-east-1:661893373836:runtime/riot_data_analyzer-pE01nfE4X0
+      REACT_APP_CLOUDFRONT_URL: https://d3niiaajvbtu1l.cloudfront.net/lol-data
+      REACT_APP_LOL_VERSION: 15.21.1

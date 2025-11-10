@@ -18,8 +18,9 @@ const ChatInterface = ({
   useEffect(() => {
     // Generate session ID on component mount (33+ characters required)
     const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 15);
-    setSessionId(`s${timestamp}${random}`);
+    const random1 = Math.random().toString(36).substring(2, 15);
+    const random2 = Math.random().toString(36).substring(2, 15);
+    setSessionId(`s${timestamp}${random1}${random2}`);
     
     // Add welcome message based on context
     const welcomeMessage = getWelcomeMessage(contextType);
