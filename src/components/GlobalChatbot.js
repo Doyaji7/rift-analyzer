@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import ChatInterface from './ChatInterface';
+import { useTranslation } from '../hooks/useTranslation';
 import './GlobalChatbot.css';
 
 const GlobalChatbot = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleChat = (e) => {
@@ -21,15 +23,15 @@ const GlobalChatbot = () => {
             <div className="chat-title">
               <div className="bot-avatar">🤖</div>
               <div>
-                <h4>LoL AI 어시스턴트</h4>
+                <h4>{t('chat.title')}</h4>
               </div>
             </div>
             <button 
               className="minimize-btn" 
               onClick={toggleChat}
               type="button"
-              aria-label="챗봇 최소화"
-              title="최소화"
+              aria-label={t('chat.minimize')}
+              title={t('chat.minimize')}
             >
               🔙
             </button>
@@ -50,8 +52,8 @@ const GlobalChatbot = () => {
         <button 
           className="chat-toggle"
           onClick={toggleChat}
-          aria-label="챗봇 열기"
-          title="AI 챗봇 열기"
+          aria-label={t('chat.open')}
+          title={t('chat.open')}
         >
           💬
           <div className="notification-dot"></div>

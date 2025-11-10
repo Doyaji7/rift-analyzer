@@ -1,12 +1,77 @@
 .home-page {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.home-layout {
+  display: grid;
+  grid-template-columns: 1fr 650px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.home-content {
+  min-width: 0;
+}
+
+.home-chatbot {
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 100px);
+  max-height: 700px;
+}
+
+.chatbot-container {
+  height: 100%;
+  background-color: #1e2328;
+  border-radius: 8px;
+  border: 2px solid #463714;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatbot-header {
+  background: linear-gradient(135deg, #c89b3c 0%, #f0e6d2 100%);
+  color: #0f1419;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 2px solid #785a28;
+}
+
+.chatbot-header .bot-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #0f1419;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  border: 2px solid #463714;
+}
+
+.chatbot-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #0f1419;
+}
+
+.chatbot-container .chat-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .hero-section {
   text-align: center;
-  margin-bottom: 3rem;
-  padding: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
   background: linear-gradient(135deg, #1e2328 0%, #3c3c41 100%);
   border-radius: 8px;
   border: 1px solid #c89b3c;
@@ -14,18 +79,18 @@
 
 .hero-section h2 {
   color: #c89b3c;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .hero-section p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #cdbe91;
 }
 
 .welcome-message {
-  margin-top: 1.5rem;
-  padding: 1rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
   background-color: rgba(200, 155, 60, 0.1);
   border: 1px solid #c89b3c;
   border-radius: 6px;
@@ -33,7 +98,7 @@
 
 .welcome-message p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #f0e6d2;
 }
 
@@ -50,14 +115,14 @@
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .feature-card {
   background-color: #1e2328;
-  padding: 2rem;
+  padding: 1.25rem;
   border-radius: 8px;
   border: 1px solid #463714;
   transition: transform 0.2s, border-color 0.2s;
@@ -70,13 +135,14 @@
 
 .feature-card h3 {
   color: #c89b3c;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
 }
 
 .feature-card p {
   color: #cdbe91;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: 0.9rem;
 }
 
 .champions-section {
@@ -170,13 +236,26 @@
   margin: 0;
 }
 
+@media (max-width: 1024px) {
+  .home-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .home-chatbot {
+    position: relative;
+    top: 0;
+    height: 600px;
+    max-height: 600px;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-section h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   
   .hero-section p {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   
   .features-grid {
@@ -203,6 +282,11 @@
   
   .champions-section {
     padding: 1.5rem;
+  }
+  
+  .home-chatbot {
+    height: 500px;
+    max-height: 500px;
   }
 }
 

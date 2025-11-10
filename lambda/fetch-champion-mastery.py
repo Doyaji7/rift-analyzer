@@ -102,9 +102,8 @@ def lambda_handler(event, context):
         # Step 3: Process and enhance mastery data
         processed_mastery = process_mastery_data(mastery_data, summoner_name, region)
         
-        # Step 4: Save to S3
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        s3_key = f"mastery-data/{safe_summoner_name}/mastery_{timestamp}.json"
+        # Step 4: Save to S3 (single file, overwrite on each request)
+        s3_key = f"mastery-data/{safe_summoner_name}/mastery.json"
         
         s3.put_object(
             Bucket=bucket_name,

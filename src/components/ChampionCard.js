@@ -1,8 +1,10 @@
 import React from 'react';
 import { dataDragon } from '../config/environment';
+import { useTranslation } from '../hooks/useTranslation';
 import './ChampionCard.css';
 
 const ChampionCard = ({ champion, onClick }) => {
+  const { t } = useTranslation();
   const handleClick = () => {
     if (onClick) {
       onClick(champion);
@@ -26,7 +28,7 @@ const ChampionCard = ({ champion, onClick }) => {
           }}
         />
         <div className="champion-overlay">
-          <span className="view-details">상세보기</span>
+          <span className="view-details">{t('match.detail')}</span>
         </div>
       </div>
       
@@ -43,7 +45,7 @@ const ChampionCard = ({ champion, onClick }) => {
         </div>
         
         <div className="champion-difficulty">
-          <span className="difficulty-label">난이도:</span>
+          <span className="difficulty-label">{t('champions.difficulty')}</span>
           <div className="difficulty-bars">
             {[...Array(3)].map((_, index) => (
               <div 

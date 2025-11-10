@@ -2,9 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ChampionCard from '../components/ChampionCard';
 import ChampionModal from '../components/ChampionModal';
 import { dataDragon } from '../config/environment';
+import { useLanguage } from '../hooks/useLanguage';
+import { useTranslation } from '../hooks/useTranslation';
+import { fetchChampionData, fetchChampionDetails } from '../services/championService';
 import './ChampionsPage.css';
 
 const ChampionsPage = () => {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedChampion, setSelectedChampion] = useState(null);
@@ -20,17 +25,11 @@ const ChampionsPage = () => {
         setIsLoading(true);
         setError(null);
         
-        // Fetch directly from Riot's Data Dragon CDN
-        const response = await fetch(dataDragon.championDataUrl());
-        
-        if (!response.ok) {
-          throw new Error('챔피언 데이터를 불러오는데 실패했습니다');
-        }
-        
-        const data = await response.json();
+        // Fetch champion data using the language context
+        const data = await fetchChampionData(language);
         
         // Transform Data Dragon format to our component format
-        const transformedChampions = Object.values(data.data).map(champ => ({
+        const transformedChampions = Object.values(data).map(champ => ({
           id: champ.id,
           name: champ.name,
           title: champ.title,
@@ -52,7 +51,7 @@ const ChampionsPage = () => {
     };
     
     fetchChampions();
-  }, []);
+  }, [language]);
 
   // Fallback mock champion data
   const mockChampions = [
@@ -64,11 +63,11 @@ const ChampionsPage = () => {
       info: { attack: 3, defense: 4, magic: 8, difficulty: 5 },
       image: { full: 'Ahri.png' },
       skills: [
-        { key: 'P', name: 'Essence Theft', description: '적 챔피언에게 스킬을 적중시키면 체력을 회복합니다.' },
-        { key: 'Q', name: 'Orb of Deception', description: '구슬을 던져 적들에게 마법 피해를 입힙니다.' },
-        { key: 'W', name: 'Fox-Fire', description: '여우불을 소환하여 주변 적들을 공격합니다.' },
-        { key: 'E', name: 'Charm', description: '적을 매혹시켜 자신 쪽으로 끌어당깁니다.' },
-        { key: 'R', name: 'Spirit Rush', description: '순간이동하며 적들에게 피해를 입힙니다.' }
+        { key: 'P', name: 'Essence Theft', description: '적 챔피언에게 스킬을 적중시키면 체력을 회복합니다.', image: 'Ahri_SoulEater2.png' },
+        { key: 'Q', name: 'Orb of Deception', description: '구슬을 던져 적들에게 마법 피해를 입힙니다.', image: 'AhriQ.png' },
+        { key: 'W', name: 'Fox-Fire', description: '여우불을 소환하여 주변 적들을 공격합니다.', image: 'AhriW.png' },
+        { key: 'E', name: 'Charm', description: '적을 매혹시켜 자신 쪽으로 끌어당깁니다.', image: 'AhriE.png' },
+        { key: 'R', name: 'Spirit Rush', description: '순간이동하며 적들에게 피해를 입힙니다.', image: 'AhriR.png' }
       ],
       lore: '아이오니아의 광활한 숲에서 태어난 아리는 자신의 마법적 본질과 인간 세계 사이에서 균형을 찾으려 노력하는 구미호입니다.'
     },
@@ -96,11 +95,11 @@ const ChampionsPage = () => {
       info: { attack: 5, defense: 3, magic: 8, difficulty: 7 },
       image: { full: 'Akali.png' },
       skills: [
-        { key: 'P', name: 'Assassin\'s Mark', description: '스킬로 적을 맞히면 표식이 생기고, 표식을 공격하면 추가 피해를 입힙니다.' },
-        { key: 'Q', name: 'Five Point Strike', description: '쿠나이를 던져 부채꼴 범위의 적들에게 피해를 입힙니다.' },
-        { key: 'W', name: 'Twilight Shroud', description: '연막을 생성하여 은신하고 이동 속도가 증가합니다.' },
-        { key: 'E', name: 'Shuriken Flip', description: '수리검을 던지고 재사용하면 적에게 돌진합니다.' },
-        { key: 'R', name: 'Perfect Execution', description: '적에게 돌진하여 강력한 피해를 입힙니다.' }
+        { key: 'P', name: 'Assassin\'s Mark', description: '스킬로 적을 맞히면 표식이 생기고, 표식을 공격하면 추가 피해를 입힙니다.', image: 'Akali_P.png' },
+        { key: 'Q', name: 'Five Point Strike', description: '쿠나이를 던져 부채꼴 범위의 적들에게 피해를 입힙니다.', image: 'AkaliQ.png' },
+        { key: 'W', name: 'Twilight Shroud', description: '연막을 생성하여 은신하고 이동 속도가 증가합니다.', image: 'AkaliW.png' },
+        { key: 'E', name: 'Shuriken Flip', description: '수리검을 던지고 재사용하면 적에게 돌진합니다.', image: 'AkaliE.png' },
+        { key: 'R', name: 'Perfect Execution', description: '적에게 돌진하여 강력한 피해를 입힙니다.', image: 'AkaliR.png' }
       ],
       lore: '킨코우 결사를 떠난 아칼리는 이제 홀로 아이오니아의 적들과 맞서 싸우는 자유로운 암살자입니다.'
     },
@@ -154,61 +153,95 @@ const ChampionsPage = () => {
     }
   ];
 
-  const roles = [
-    { value: 'all', label: '전체' },
-    { value: 'Assassin', label: '암살자' },
-    { value: 'Fighter', label: '전사' },
-    { value: 'Mage', label: '마법사' },
-    { value: 'Marksman', label: '원거리딜러' },
-    { value: 'Support', label: '서포터' },
-    { value: 'Tank', label: '탱커' }
+  const [selectedLanes, setSelectedLanes] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+
+  const lanes = [
+    { value: 'top', label: t('champions.lanes.top'), tags: ['Fighter', 'Tank'] },
+    { value: 'jungle', label: t('champions.lanes.jungle'), tags: ['Fighter', 'Tank', 'Assassin'] },
+    { value: 'mid', label: t('champions.lanes.mid'), tags: ['Mage', 'Assassin'] },
+    { value: 'adc', label: t('champions.lanes.adc'), tags: ['Marksman'] },
+    { value: 'support', label: t('champions.lanes.support'), tags: ['Support', 'Tank', 'Mage'] }
   ];
+
+  const roles = [
+    { value: 'Assassin', label: t('champions.filter.assassin') },
+    { value: 'Fighter', label: t('champions.filter.fighter') },
+    { value: 'Mage', label: t('champions.filter.mage') },
+    { value: 'Marksman', label: t('champions.filter.marksman') },
+    { value: 'Support', label: t('champions.filter.support') },
+    { value: 'Tank', label: t('champions.filter.tank') }
+  ];
+
+  const handleLaneToggle = (laneValue) => {
+    setSelectedLanes(prev => 
+      prev.includes(laneValue) 
+        ? prev.filter(l => l !== laneValue)
+        : [...prev, laneValue]
+    );
+  };
+
+  const handleRoleToggle = (roleValue) => {
+    setSelectedRoles(prev => 
+      prev.includes(roleValue) 
+        ? prev.filter(r => r !== roleValue)
+        : [...prev, roleValue]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedLanes([]);
+    setSelectedRoles([]);
+    setSearchTerm('');
+  };
 
   const filteredChampions = useMemo(() => {
     return champions.filter(champion => {
       const matchesSearch = champion.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            champion.title.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesRole = selectedRole === 'all' || champion.tags.includes(selectedRole);
-      return matchesSearch && matchesRole;
+      
+      // Lane filter: check if champion's tags match any selected lane's tags
+      const matchesLane = selectedLanes.length === 0 || selectedLanes.some(laneValue => {
+        const lane = lanes.find(l => l.value === laneValue);
+        return lane && champion.tags.some(tag => lane.tags.includes(tag));
+      });
+      
+      // Role filter: check if champion has any of the selected roles
+      const matchesRole = selectedRoles.length === 0 || 
+                         champion.tags.some(tag => selectedRoles.includes(tag));
+      
+      return matchesSearch && matchesLane && matchesRole;
     });
-  }, [champions, searchTerm, selectedRole]);
+  }, [champions, searchTerm, selectedLanes, selectedRoles]);
 
   const handleChampionClick = async (champion) => {
     try {
-      // Fetch detailed champion data from CloudFront
-      const response = await fetch(
-        `${dataDragon.baseUrl}/${dataDragon.version}/data/en_US/champion/${champion.id}.json`
-      );
+      // Fetch detailed champion data using the language context
+      const detailedChampion = await fetchChampionDetails(champion.id, language);
       
-      if (response.ok) {
-        const data = await response.json();
-        const detailedChampion = data.data[champion.id];
-        
-        // Transform spells to match our format
-        const skills = [
-          {
-            key: 'P',
-            name: detailedChampion.passive.name,
-            description: detailedChampion.passive.description
-          },
-          ...detailedChampion.spells.map((spell, index) => ({
-            key: ['Q', 'W', 'E', 'R'][index],
-            name: spell.name,
-            description: spell.description
-          }))
-        ];
-        
-        setSelectedChampion({
-          ...champion,
-          skills,
-          lore: detailedChampion.lore,
-          passive: detailedChampion.passive,
-          spells: detailedChampion.spells
-        });
-      } else {
-        // Fallback to basic info if detailed fetch fails
-        setSelectedChampion(champion);
-      }
+      // Transform spells to match our format
+      const skills = [
+        {
+          key: 'P',
+          name: detailedChampion.passive.name,
+          description: detailedChampion.passive.description,
+          image: detailedChampion.passive.image.full
+        },
+        ...detailedChampion.spells.map((spell, index) => ({
+          key: ['Q', 'W', 'E', 'R'][index],
+          name: spell.name,
+          description: spell.description,
+          image: spell.image.full
+        }))
+      ];
+      
+      setSelectedChampion({
+        ...champion,
+        skills,
+        lore: detailedChampion.lore,
+        passive: detailedChampion.passive,
+        spells: detailedChampion.spells
+      });
     } catch (err) {
       console.error('Failed to fetch champion details:', err);
       // Fallback to basic info
@@ -226,61 +259,96 @@ const ChampionsPage = () => {
   return (
     <div className="champions-page">
       <div className="page-header">
-        <h2>챔피언 정보</h2>
-        <p>모든 챔피언의 스탯, 스킬, 빌드 정보를 확인하세요.</p>
-        {error && <p className="error-message">⚠️ {error} (임시 데이터 표시 중)</p>}
+        <h2>{t('champions.title')}</h2>
+        <p>{t('champions.description')}</p>
+        {error && <p className="error-message">⚠️ {error} ({t('champions.error')})</p>}
       </div>
       
-      <div className="champions-filters">
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="챔피언 이름 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="champion-search"
-          />
-        </div>
-        
-        <div className="role-filter">
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="role-select"
-          >
-            {roles.map(role => (
-              <option key={role.value} value={role.value}>
-                {role.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {isLoading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>챔피언 데이터를 불러오는 중...</p>
-        </div>
-      ) : (
-        <>
-          <div className="champions-grid">
-            {filteredChampions.map(champion => (
-              <ChampionCard
-                key={champion.id}
-                champion={champion}
-                onClick={handleChampionClick}
-              />
-            ))}
+      <div className="champions-layout">
+        <aside className="champions-sidebar">
+          <div className="filter-section">
+            <div className="filter-header">
+              <h3>{t('champions.filter.search')}</h3>
+            </div>
+            <input
+              type="text"
+              placeholder={t('champions.search')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="champion-search"
+            />
           </div>
 
-          {filteredChampions.length === 0 && !isLoading && (
-            <div className="no-champions">
-              <p>검색 조건에 맞는 챔피언이 없습니다.</p>
+          <div className="filter-section">
+            <div className="filter-header">
+              <h3>{t('champions.filter.role')}</h3>
             </div>
+            <div className="filter-checkboxes">
+              {roles.map(role => (
+                <label key={role.value} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedRoles.includes(role.value)}
+                    onChange={() => handleRoleToggle(role.value)}
+                  />
+                  <span>{role.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <div className="filter-header">
+              <h3>{t('champions.filter.lane')}</h3>
+            </div>
+            <div className="filter-checkboxes">
+              {lanes.map(lane => (
+                <label key={lane.value} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedLanes.includes(lane.value)}
+                    onChange={() => handleLaneToggle(lane.value)}
+                  />
+                  <span>{lane.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {(selectedLanes.length > 0 || selectedRoles.length > 0 || searchTerm) && (
+            <button className="clear-filters-btn" onClick={clearFilters}>
+              {t('champions.filter.clearFilters')}
+            </button>
           )}
-        </>
-      )}
+        </aside>
+
+        <div className="champions-content">
+          {isLoading ? (
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p>챔피언 데이터를 불러오는 중...</p>
+            </div>
+          ) : (
+            <>
+              <div className="champions-grid">
+                {filteredChampions.map(champion => (
+                  <ChampionCard
+                    key={champion.id}
+                    champion={champion}
+                    onClick={handleChampionClick}
+                  />
+                ))}
+              </div>
+
+              {filteredChampions.length === 0 && !isLoading && (
+                <div className="no-champions">
+                  <p>{t('champions.noResults')}</p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
 
       <ChampionModal
         champion={selectedChampion}

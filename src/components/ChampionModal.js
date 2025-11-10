@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { dataDragon } from '../config/environment';
 import ChatInterface from './ChatInterface';
+import { getSpellImageUrl, getPassiveImageUrl } from '../utils/imageUtils';
+import { useTranslation } from '../hooks/useTranslation';
 import './ChampionModal.css';
 
 const ChampionModal = ({ champion, isOpen, onClose }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('info');
 
   if (!isOpen || !champion) return null;
@@ -49,13 +52,13 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
             className={`tab-button ${activeTab === 'info' ? 'active' : ''}`}
             onClick={() => setActiveTab('info')}
           >
-            정보
+            {t('champions.modal.info')}
           </button>
           <button 
             className={`tab-button ${activeTab === 'chat' ? 'active' : ''}`}
             onClick={() => setActiveTab('chat')}
           >
-            AI 공략
+            {t('champions.modal.aiGuide')}
           </button>
         </div>
 
@@ -63,10 +66,10 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
           {activeTab === 'info' && (
             <>
               <div className="champion-stats">
-                <h3>기본 스탯</h3>
+                <h3>{t('champions.modal.stats')}</h3>
                 <div className="stats-grid">
                   <div className="stat-item">
-                    <span className="stat-label">공격력</span>
+                    <span className="stat-label">{t('champions.modal.attack')}</span>
                     <div className="stat-bar">
                       <div 
                         className="stat-fill" 
@@ -77,7 +80,7 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
                   </div>
                   
                   <div className="stat-item">
-                    <span className="stat-label">방어력</span>
+                    <span className="stat-label">{t('champions.modal.defense')}</span>
                     <div className="stat-bar">
                       <div 
                         className="stat-fill" 
@@ -88,7 +91,7 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
                   </div>
                   
                   <div className="stat-item">
-                    <span className="stat-label">마법력</span>
+                    <span className="stat-label">{t('champions.modal.magic')}</span>
                     <div className="stat-bar">
                       <div 
                         className="stat-fill" 
@@ -99,7 +102,7 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
                   </div>
                   
                   <div className="stat-item">
-                    <span className="stat-label">난이도</span>
+                    <span className="stat-label">{t('champions.modal.difficulty')}</span>
                     <div className="stat-bar">
                       <div 
                         className="stat-fill difficulty" 
@@ -113,12 +116,25 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
 
               {champion.skills && (
                 <div className="champion-skills">
-                  <h3>스킬</h3>
+                  <h3>{t('champions.modal.skills')}</h3>
                   <div className="skills-grid">
                     {champion.skills.map((skill, index) => (
                       <div key={index} className="skill-item">
                         <div className="skill-icon">
-                          <span className="skill-key">{skill.key}</span>
+                          {skill.image ? (
+                            <img 
+                              src={skill.key === 'P' ? getPassiveImageUrl(skill.image) : getSpellImageUrl(skill.image)}
+                              alt={skill.name}
+                              className="skill-image"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          <span className="skill-key" style={{ display: skill.image ? 'none' : 'flex' }}>
+                            {skill.key}
+                          </span>
                         </div>
                         <div className="skill-info">
                           <h4>{skill.name}</h4>
@@ -132,7 +148,7 @@ const ChampionModal = ({ champion, isOpen, onClose }) => {
 
               {champion.lore && (
                 <div className="champion-lore">
-                  <h3>배경 스토리</h3>
+                  <h3>{t('champions.modal.lore')}</h3>
                   <p>{champion.lore}</p>
                 </div>
               )}

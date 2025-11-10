@@ -1,0 +1,245 @@
+{
+  "nav": {
+    "home": "홈",
+    "champions": "챔피언 정보",
+    "summoner": "소환사 검색",
+    "analysis": "전적 분석"
+  },
+  "home": {
+    "title": "LoL Match Analyzer에 오신 것을 환영합니다",
+    "subtitle": "AI 기반 리그오브레전드 전적 분석 도구",
+    "description": "소환사의 게임 데이터를 수집하고 AI로 분석하여 실력 향상을 돕습니다.",
+    "features": {
+      "title": "주요 기능",
+      "summoner": {
+        "title": "소환사 검색",
+        "description": "Riot ID로 소환사를 검색하고 최근 게임 전적을 확인하세요."
+      },
+      "champion": {
+        "title": "챔피언 정보",
+        "description": "모든 챔피언의 스탯, 스킬, 빌드 정보를 확인하세요."
+      },
+      "analysis": {
+        "title": "AI 분석",
+        "description": "게임 데이터를 AI가 분석하여 개선점을 제안합니다."
+      },
+      "mastery": {
+        "title": "챔피언 숙련도",
+        "description": "플레이한 챔피언의 숙련도와 레벨을 확인하세요."
+      }
+    },
+    "getStarted": "시작하기"
+  },
+  "champions": {
+    "title": "챔피언 정보",
+    "description": "모든 챔피언의 스탯, 스킬, 빌드 정보를 확인하세요.",
+    "search": "챔피언 이름 검색...",
+    "difficulty": "난이도:",
+    "filter": {
+      "all": "전체",
+      "assassin": "암살자",
+      "fighter": "전사",
+      "mage": "마법사",
+      "marksman": "원거리딜러",
+      "support": "서포터",
+      "tank": "탱커",
+      "role": "역할",
+      "lane": "라인",
+      "search": "검색",
+      "clearFilters": "필터 초기화"
+    },
+    "lanes": {
+      "top": "탑",
+      "jungle": "정글",
+      "mid": "미드",
+      "adc": "원딜",
+      "support": "서포터"
+    },
+    "loading": "챔피언 데이터를 불러오는 중...",
+    "noResults": "검색 조건에 맞는 챔피언이 없습니다.",
+    "error": "임시 데이터 표시 중",
+    "modal": {
+      "info": "정보",
+      "aiGuide": "AI 공략",
+      "stats": "기본 스탯",
+      "attack": "공격력",
+      "defense": "방어력",
+      "magic": "마법력",
+      "difficulty": "난이도",
+      "skills": "스킬",
+      "lore": "배경 스토리"
+    }
+  },
+  "summoner": {
+    "title": "소환사 검색",
+    "placeholder": "소환사명#태그 (예: Hide on bush#KR1)",
+    "search": "검색",
+    "searching": "수집 중...",
+    "retry": "다시 시도",
+    "regions": {
+      "kr": "한국 (KR)",
+      "na1": "북미 (NA)",
+      "euw1": "서유럽 (EUW)",
+      "eun1": "동유럽 (EUNE)",
+      "jp1": "일본 (JP)",
+      "br1": "브라질 (BR)",
+      "la1": "라틴아메리카 북부 (LAN)",
+      "la2": "라틴아메리카 남부 (LAS)",
+      "oc1": "오세아니아 (OCE)",
+      "tr1": "터키 (TR)",
+      "ru": "러시아 (RU)"
+    },
+    "validation": {
+      "formatError": "소환사명#태그 형식으로 입력해주세요 (예: Hide on bush#KR1)",
+      "emptyFields": "게임명과 태그를 모두 입력해주세요",
+      "lengthError": "게임명은 16자, 태그는 5자를 초과할 수 없습니다"
+    },
+    "errors": {
+      "collectionFailed": "데이터 수집에 실패했습니다",
+      "sessionCreationFailed": "세션 생성에 실패했습니다. 브라우저 설정을 확인해주세요.",
+      "sessionCreationError": "세션 생성 오류: ",
+      "searchError": "검색 중 오류가 발생했습니다"
+    },
+    "matchCount": {
+      "5": "5게임",
+      "10": "10게임",
+      "15": "15게임",
+      "20": "20게임"
+    },
+    "status": {
+      "title": "데이터 수집 상태",
+      "matchHistory": "전적 수집",
+      "mastery": "숙련도 수집",
+      "success": "완료",
+      "failed": "실패"
+    },
+    "matches": {
+      "title": "최근 게임 전적",
+      "total": "총 게임",
+      "winRate": "승률",
+      "record": "승/패",
+      "games": "게임"
+    },
+    "placeholder": {
+      "title": "전적 및 숙련도 정보",
+      "description": "소환사명을 입력하면 다음 정보들이 표시됩니다:",
+      "items": [
+        "최근 게임 전적 (승패, KDA, 플레이한 챔피언)",
+        "챔피언 숙련도 정보",
+        "게임별 상세 분석 링크"
+      ]
+    }
+  },
+  "match": {
+    "victory": "승리",
+    "defeat": "패배",
+    "kda": "KDA",
+    "damage": "데미지",
+    "gold": "골드",
+    "vision": "시야",
+    "analyze": "AI 분석",
+    "closeAnalysis": "분석 닫기",
+    "detail": "상세보기"
+  },
+  "mastery": {
+    "title": "챔피언 숙련도",
+    "totalScore": "총 숙련도 점수",
+    "totalChampions": "플레이한 챔피언",
+    "level7": "레벨 7 챔피언",
+    "points": "점",
+    "loading": "숙련도 데이터를 불러오는 중...",
+    "error": "숙련도 데이터를 불러올 수 없습니다",
+    "noData": "숙련도 데이터가 없습니다"
+  },
+  "chat": {
+    "title": "LoL AI 어시스턴트",
+    "minimize": "최소화",
+    "open": "AI 챗봇 열기",
+    "placeholder": "메시지를 입력하세요...",
+    "suggestedQuestions": "이런 질문들을 해보세요:",
+    "welcome": {
+      "general": "안녕하세요! 리그오브레전드에 대해 무엇이든 물어보세요. 챔피언 공략, 매치 분석, 플레이 팁 등 도움이 필요한 것이 있으면 언제든 말씀해주세요! ⚡",
+      "champion": "안녕하세요! 챔피언에 대해 궁금한 것이 있으시면 언제든 물어보세요. 빌드, 스킬 순서, 플레이 팁 등 무엇이든 도와드릴게요! 🎮",
+      "match": "매치 분석을 도와드릴게요! 게임에서의 성과나 개선점에 대해 궁금한 점이 있으시면 말씀해주세요. 📊",
+      "trend": "플레이 성향 분석을 시작해볼까요? 최근 게임들의 패턴이나 개선 방향에 대해 분석해드릴 수 있어요! 📈"
+    },
+    "suggestions": {
+      "champion": {
+        "q1": "이 챔피언의 추천 빌드는?",
+        "q2": "스킬 순서는 어떻게 해야 하나요?",
+        "q3": "라인전에서 주의할 점은?",
+        "q4": "팀파이트에서의 역할은?"
+      },
+      "match": {
+        "q1": "이 게임에서 잘한 점은?",
+        "q2": "개선할 점이 있다면?",
+        "q3": "KDA가 낮은 이유는?",
+        "q4": "아이템 빌드는 적절했나요?"
+      },
+      "trend": {
+        "q1": "최근 성과는 어떤가요?",
+        "q2": "주로 하는 챔피언 분석해주세요",
+        "q3": "플레이 스타일의 특징은?",
+        "q4": "어떤 점을 개선하면 좋을까요?"
+      },
+      "general": {
+        "q1": "추천 챔피언이 있나요?",
+        "q2": "최근 메타는 어떤가요?",
+        "q3": "실력 향상 팁을 알려주세요",
+        "q4": "포지션별 특징을 설명해주세요"
+      }
+    }
+  },
+  "analysis": {
+    "title": "매치 분석",
+    "description": "게임 전적을 상세히 분석하고 개선점을 찾아보세요.",
+    "noSession": "분석을 위해서는 먼저",
+    "summonerSearch": "소환사 검색",
+    "collectData": "에서 전적을 수집해주세요.",
+    "types": {
+      "single": {
+        "title": "단일 매치 분석",
+        "description": "특정 게임에 대한 상세한 AI 분석을 받아보세요.",
+        "feature1": "개인 성과 분석",
+        "feature2": "팀 기여도 평가",
+        "feature3": "개선점 제안"
+      },
+      "trend": {
+        "title": "플레이 성향 트렌드",
+        "description": "여러 게임을 종합하여 플레이 패턴을 분석합니다.",
+        "feature1": "선호 챔피언 분석",
+        "feature2": "포지션별 성과",
+        "feature3": "시간대별 트렌드"
+      }
+    },
+    "comingSoon": "구현 예정",
+    "preview": {
+      "title": "분석 예시",
+      "gameSummary": "게임 요약",
+      "keyPoints": "주요 분석 포인트",
+      "suggestions": "개선 제안"
+    }
+  },
+  "session": {
+    "loading": "세션 로딩 중...",
+    "error": "세션 오류",
+    "searchPrompt": "소환사를 검색해주세요",
+    "currentSummoner": "현재 조회중인 소환사:",
+    "expires": "세션 만료:",
+    "hoursAfter": "시간",
+    "minutesAfter": "분 후",
+    "language": "언어:",
+    "theme": "테마:",
+    "changeSummoner": "소환사 변경",
+    "closeError": "오류 메시지 닫기",
+    "searchOther": "다른 소환사 검색"
+  },
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "retry": "다시 시도",
+    "close": "닫기",
+    "cancel": "취소",
+    "confirm": "확인"
+  }
+}

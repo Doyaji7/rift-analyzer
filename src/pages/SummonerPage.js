@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import MatchCard from '../components/MatchCard';
+import ChampionMastery from '../components/ChampionMastery';
 import { config, endpoints } from '../config/environment';
 import { useSession } from '../contexts/SessionContext';
+import { useLanguage } from '../hooks/useLanguage';
+import { useTranslation } from '../hooks/useTranslation';
+import { fetchChampionData } from '../services/championService';
 import './SummonerPage.css';
 
 const SummonerPage = () => {
@@ -10,6 +14,8 @@ const SummonerPage = () => {
     createSession, 
     getSummonerInfo
   } = useSession();
+  const { language } = useLanguage();
+  const { t } = useTranslation();
   
   const [summonerName, setSummonerName] = useState('');
   const [region, setRegion] = useState('kr');
@@ -17,7 +23,22 @@ const SummonerPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [collectionStatus, setCollectionStatus] = useState(null);
   const [summonerData, setSummonerData] = useState(null);
+  const [championData, setChampionData] = useState(null);
   const [error, setError] = useState(null);
+
+  // Fetch champion data when language changes
+  useEffect(() => {
+    const loadChampionData = async () => {
+      try {
+        const data = await fetchChampionData(language);
+        setChampionData(data);
+      } catch (err) {
+        console.error('Failed to fetch champion data:', err);
+      }
+    };
+    
+    loadChampionData();
+  }, [language]);
 
   // Initialize form with session data if available
   useEffect(() => {
@@ -32,31 +53,31 @@ const SummonerPage = () => {
   }, [session]);
 
   const regions = [
-    { value: 'kr', label: '한국 (KR)' },
-    { value: 'na1', label: '북미 (NA)' },
-    { value: 'euw1', label: '서유럽 (EUW)' },
-    { value: 'eun1', label: '동유럽 (EUNE)' },
-    { value: 'jp1', label: '일본 (JP)' },
-    { value: 'br1', label: '브라질 (BR)' },
-    { value: 'la1', label: '라틴아메리카 북부 (LAN)' },
-    { value: 'la2', label: '라틴아메리카 남부 (LAS)' },
-    { value: 'oc1', label: '오세아니아 (OCE)' },
-    { value: 'tr1', label: '터키 (TR)' },
-    { value: 'ru', label: '러시아 (RU)' }
+    { value: 'kr', label: t('summoner.regions.kr') },
+    { value: 'na1', label: t('summoner.regions.na1') },
+    { value: 'euw1', label: t('summoner.regions.euw1') },
+    { value: 'eun1', label: t('summoner.regions.eun1') },
+    { value: 'jp1', label: t('summoner.regions.jp1') },
+    { value: 'br1', label: t('summoner.regions.br1') },
+    { value: 'la1', label: t('summoner.regions.la1') },
+    { value: 'la2', label: t('summoner.regions.la2') },
+    { value: 'oc1', label: t('summoner.regions.oc1') },
+    { value: 'tr1', label: t('summoner.regions.tr1') },
+    { value: 'ru', label: t('summoner.regions.ru') }
   ];
 
   const validateRiotId = (riotId) => {
     if (!riotId || !riotId.includes('#')) {
-      return '소환사명#태그 형식으로 입력해주세요 (예: Hide on bush#KR1)';
+      return t('summoner.validation.formatError');
     }
     
     const [gameName, tagLine] = riotId.split('#');
     if (!gameName.trim() || !tagLine.trim()) {
-      return '게임명과 태그를 모두 입력해주세요';
+      return t('summoner.validation.emptyFields');
     }
     
     if (gameName.length > 16 || tagLine.length > 5) {
-      return '게임명은 16자, 태그는 5자를 초과할 수 없습니다';
+      return t('summoner.validation.lengthError');
     }
     
     return null;
@@ -96,7 +117,7 @@ const SummonerPage = () => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || data.message || '데이터 수집에 실패했습니다');
+        throw new Error(data.error || data.message || t('summoner.errors.collectionFailed'));
       }
       
       setCollectionStatus(data);
@@ -118,17 +139,17 @@ const SummonerPage = () => {
             await fetchSummonerData(trimmedName);
           } else {
             console.error('Session creation returned null');
-            setError('세션 생성에 실패했습니다. 브라우저 설정을 확인해주세요.');
+            setError(t('summoner.errors.sessionCreationFailed'));
           }
         } catch (sessionError) {
           console.error('Session creation error:', sessionError);
-          setError('세션 생성 오류: ' + sessionError.message);
+          setError(t('summoner.errors.sessionCreationError') + sessionError.message);
         }
       }
       
     } catch (err) {
       console.error('Search error:', err);
-      setError(err.message || '검색 중 오류가 발생했습니다');
+      setError(err.message || t('summoner.errors.searchError'));
     } finally {
       setIsLoading(false);
     }
@@ -174,13 +195,13 @@ const SummonerPage = () => {
   return (
     <div className="summoner-page">
       <div className="search-section">
-        <h2>소환사 검색</h2>
+        <h2>{t('summoner.title')}</h2>
         <form onSubmit={handleSearch} className="search-form">
           <div className="input-row">
             <div className="input-group">
               <input
                 type="text"
-                placeholder="소환사명#태그 (예: Hide on bush#KR1)"
+                placeholder={t('summoner.placeholder')}
                 value={summonerName}
                 onChange={(e) => setSummonerName(e.target.value)}
                 className="summoner-input"
@@ -208,10 +229,10 @@ const SummonerPage = () => {
                 className="count-select"
                 disabled={isLoading}
               >
-                <option value={5}>5게임</option>
-                <option value={10}>10게임</option>
-                <option value={15}>15게임</option>
-                <option value={20}>20게임</option>
+                <option value={5}>{t('summoner.matchCount.5')}</option>
+                <option value={10}>{t('summoner.matchCount.10')}</option>
+                <option value={15}>{t('summoner.matchCount.15')}</option>
+                <option value={20}>{t('summoner.matchCount.20')}</option>
               </select>
             </div>
             
@@ -220,7 +241,7 @@ const SummonerPage = () => {
               className="search-button"
               disabled={isLoading || !summonerName.trim()}
             >
-              {isLoading ? '수집 중...' : '검색'}
+              {isLoading ? t('summoner.searching') : t('summoner.search')}
             </button>
           </div>
         </form>
@@ -228,25 +249,25 @@ const SummonerPage = () => {
         {error && (
           <div className="error-message">
             <span className="error-text">{error}</span>
-            <button onClick={handleRetry} className="retry-button">다시 시도</button>
+            <button onClick={handleRetry} className="retry-button">{t('summoner.retry')}</button>
           </div>
         )}
       </div>
 
       {collectionStatus && (
         <div className="collection-status">
-          <h3>데이터 수집 상태</h3>
+          <h3>{t('summoner.status.title')}</h3>
           <div className="status-grid">
             <div className={`status-item ${collectionStatus.collectionStatus.matchHistory}`}>
-              <span className="status-label">전적 수집</span>
+              <span className="status-label">{t('summoner.status.matchHistory')}</span>
               <span className="status-value">
-                {collectionStatus.collectionStatus.matchHistory === 'success' ? '완료' : '실패'}
+                {collectionStatus.collectionStatus.matchHistory === 'success' ? t('summoner.status.success') : t('summoner.status.failed')}
               </span>
             </div>
             <div className={`status-item ${collectionStatus.collectionStatus.mastery}`}>
-              <span className="status-label">숙련도 수집</span>
+              <span className="status-label">{t('summoner.status.mastery')}</span>
               <span className="status-value">
-                {collectionStatus.collectionStatus.mastery === 'success' ? '완료' : '실패'}
+                {collectionStatus.collectionStatus.mastery === 'success' ? t('summoner.status.success') : t('summoner.status.failed')}
               </span>
             </div>
           </div>
@@ -256,86 +277,64 @@ const SummonerPage = () => {
 
       {summonerData && (
         <div className="results-section">
-          {summonerData.mastery && (
-            <div className="mastery-section">
-              <h3>챔피언 숙련도</h3>
-              <div className="mastery-summary">
-                <div className="mastery-stat">
-                  <span className="stat-label">총 숙련도 점수</span>
-                  <span className="stat-value">{summonerData.mastery.totalScore?.toLocaleString()}</span>
-                </div>
-                <div className="mastery-stat">
-                  <span className="stat-label">플레이한 챔피언</span>
-                  <span className="stat-value">{summonerData.mastery.totalChampions}개</span>
-                </div>
-                <div className="mastery-stat">
-                  <span className="stat-label">레벨 7 챔피언</span>
-                  <span className="stat-value">{summonerData.mastery.masteryLevels?.level7 || 0}개</span>
-                </div>
-              </div>
-              
-              {summonerData.mastery.topChampions && (
-                <div className="top-champions">
-                  <h4>주요 챔피언</h4>
-                  <div className="champions-grid">
-                    {summonerData.mastery.topChampions.slice(0, 5).map((champion, index) => (
-                      <div key={champion.championId} className="champion-mastery">
-                        <div className="champion-rank">#{index + 1}</div>
-                        <div className="champion-name">{champion.championName}</div>
-                        <div className="champion-level">레벨 {champion.championLevel}</div>
-                        <div className="champion-points">{champion.championPoints.toLocaleString()} 점</div>
-                      </div>
+          <div className="results-grid">
+            <div className="mastery-column">
+              {session?.summoner?.riotId && (
+                <ChampionMastery 
+                  summonerName={session.summoner.riotId}
+                  championData={championData}
+                />
+              )}
+            </div>
+
+            <div className="matches-column">
+              {summonerData.matches && (
+                <div className="matches-section">
+                  <h3>{t('summoner.matches.title')}</h3>
+                  <div className="matches-summary">
+                    <div className="summary-stat">
+                      <span className="stat-label">{t('summoner.matches.total')}</span>
+                      <span className="stat-value">{summonerData.matches.totalMatches}{t('summoner.matches.games')}</span>
+                    </div>
+                    <div className="summary-stat">
+                      <span className="stat-label">{t('summoner.matches.winRate')}</span>
+                      <span className="stat-value">{summonerData.matches.summary?.winRate}%</span>
+                    </div>
+                    <div className="summary-stat">
+                      <span className="stat-label">{t('summoner.matches.record')}</span>
+                      <span className="stat-value">
+                        {summonerData.matches.summary?.wins}{language === 'ko_KR' ? '승' : 'W'} {summonerData.matches.summary?.losses}{language === 'ko_KR' ? '패' : 'L'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="matches-list">
+                    {summonerData.matches.matches?.map((match, index) => (
+                      <MatchCard 
+                        key={match.matchId || index} 
+                        match={match} 
+                        summonerName={session?.summoner?.riotId}
+                        championData={championData}
+                        onAnalyze={handleAnalyzeMatch}
+                      />
                     ))}
                   </div>
                 </div>
               )}
             </div>
-          )}
-
-          {summonerData.matches && (
-            <div className="matches-section">
-              <h3>최근 게임 전적</h3>
-              <div className="matches-summary">
-                <div className="summary-stat">
-                  <span className="stat-label">총 게임</span>
-                  <span className="stat-value">{summonerData.matches.totalMatches}게임</span>
-                </div>
-                <div className="summary-stat">
-                  <span className="stat-label">승률</span>
-                  <span className="stat-value">{summonerData.matches.summary?.winRate}%</span>
-                </div>
-                <div className="summary-stat">
-                  <span className="stat-label">승/패</span>
-                  <span className="stat-value">
-                    {summonerData.matches.summary?.wins}승 {summonerData.matches.summary?.losses}패
-                  </span>
-                </div>
-              </div>
-              
-              <div className="matches-list">
-                {summonerData.matches.matches?.map((match, index) => (
-                  <MatchCard 
-                    key={match.matchId || index} 
-                    match={match} 
-                    summonerName={session?.summoner?.riotId}
-                    onAnalyze={handleAnalyzeMatch}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       )}
 
       {!collectionStatus && !isLoading && (
         <div className="results-section">
           <div className="placeholder-content">
-            <h3>전적 및 숙련도 정보</h3>
-            <p>소환사명을 입력하면 다음 정보들이 표시됩니다:</p>
+            <h3>{t('summoner.placeholder.title')}</h3>
+            <p>{t('summoner.placeholder.description')}</p>
             <ul>
-              <li>최근 게임 전적 (승패, KDA, 플레이한 챔피언)</li>
-              <li>챔피언 숙련도 정보</li>
-              <li>게임별 상세 분석 링크</li>
+              {t('summoner.placeholder.items', { returnObjects: true }).map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </div>
         </div>

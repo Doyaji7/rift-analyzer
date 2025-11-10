@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSession } from '../contexts/SessionContext';
+import { useTranslation } from '../hooks/useTranslation';
 import './SessionManager.css';
 
 /**
@@ -7,6 +8,7 @@ import './SessionManager.css';
  * Displays current session status and provides session management controls
  */
 const SessionManager = ({ showDetails = false, className = '' }) => {
+  const { t } = useTranslation();
   const {
     session,
     isAuthenticated,
@@ -21,7 +23,7 @@ const SessionManager = ({ showDetails = false, className = '' }) => {
       <div className={`session-manager loading ${className}`}>
         <div className="session-status">
           <span className="status-indicator loading"></span>
-          <span className="status-text">세션 로딩 중...</span>
+          <span className="status-text">{t('session.loading')}</span>
         </div>
       </div>
     );
@@ -32,11 +34,11 @@ const SessionManager = ({ showDetails = false, className = '' }) => {
       <div className={`session-manager error ${className}`}>
         <div className="session-status">
           <span className="status-indicator error"></span>
-          <span className="status-text">세션 오류: {error}</span>
+          <span className="status-text">{t('session.error')}: {error}</span>
           <button 
             className="clear-error-btn"
             onClick={clearError}
-            title="오류 메시지 닫기"
+            title={t('session.closeError')}
           >
             ×
           </button>
@@ -50,7 +52,7 @@ const SessionManager = ({ showDetails = false, className = '' }) => {
       <div className={`session-manager unauthenticated ${className}`}>
         <div className="session-status">
           <span className="status-indicator unauthenticated"></span>
-          <span className="status-text">소환사 정보 없음</span>
+          <span className="status-text">{t('session.searchPrompt')}</span>
         </div>
       </div>
     );
@@ -68,6 +70,7 @@ const SessionManager = ({ showDetails = false, className = '' }) => {
         <span className="status-indicator authenticated"></span>
         <div className="session-info">
           <div className="summoner-info">
+            <span className="status-label">{t('session.currentSummoner')}</span>
             <span className="summoner-name">{summoner.riotId}</span>
             <span className="summoner-region">({summoner.region.toUpperCase()})</span>
           </div>
@@ -75,17 +78,17 @@ const SessionManager = ({ showDetails = false, className = '' }) => {
           {showDetails && (
             <div className="session-details">
               <div className="session-expiry">
-                <span className="expiry-label">세션 만료:</span>
+                <span className="expiry-label">{t('session.expires')}</span>
                 <span className="expiry-time">
-                  {hoursUntilExpiry > 0 ? `${hoursUntilExpiry}시간 ` : ''}
-                  {minutesUntilExpiry}분 후
+                  {hoursUntilExpiry > 0 ? `${hoursUntilExpiry}${t('session.hoursAfter')} ` : ''}
+                  {minutesUntilExpiry}{t('session.minutesAfter')}
                 </span>
               </div>
               
               <div className="session-preferences">
-                <span className="pref-label">언어:</span>
+                <span className="pref-label">{t('session.language')}</span>
                 <span className="pref-value">{preferences.language}</span>
-                <span className="pref-label">테마:</span>
+                <span className="pref-label">{t('session.theme')}</span>
                 <span className="pref-value">{preferences.theme}</span>
               </div>
             </div>
@@ -93,11 +96,11 @@ const SessionManager = ({ showDetails = false, className = '' }) => {
         </div>
         
         <button 
-          className="logout-btn"
+          className="change-summoner-btn"
           onClick={clearSession}
-          title="세션 종료"
+          title={t('session.searchOther')}
         >
-          로그아웃
+          {t('session.changeSummoner')}
         </button>
       </div>
     </div>

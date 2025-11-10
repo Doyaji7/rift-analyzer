@@ -9,15 +9,22 @@ import SummonerPage from './pages/SummonerPage';
 import AnalysisPage from './pages/AnalysisPage';
 
 // Import global components
-import GlobalChatbot from './components/GlobalChatbot';
 import SessionManager from './components/SessionManager';
 
 // Import context providers
 import { SessionProvider } from './contexts/SessionContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+
+// Import LanguageToggle component
+import LanguageToggle from './components/LanguageToggle';
+
+// Import translation hook
+import { useTranslation } from './hooks/useTranslation';
 
 // Navigation component
 const Navigation = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   
   const isActive = (path) => {
     return location.pathname === path;
@@ -29,25 +36,25 @@ const Navigation = () => {
         to="/" 
         className={`nav-link ${isActive('/') ? 'active' : ''}`}
       >
-        홈
+        {t('nav.home')}
       </Link>
       <Link 
         to="/champions" 
         className={`nav-link ${isActive('/champions') ? 'active' : ''}`}
       >
-        챔피언 정보
+        {t('nav.champions')}
       </Link>
       <Link 
         to="/summoner" 
         className={`nav-link ${isActive('/summoner') ? 'active' : ''}`}
       >
-        소환사 검색
+        {t('nav.summoner')}
       </Link>
       <Link 
         to="/analysis" 
         className={`nav-link ${isActive('/analysis') ? 'active' : ''}`}
       >
-        전적 분석
+        {t('nav.analysis')}
       </Link>
     </nav>
   );
@@ -55,32 +62,34 @@ const Navigation = () => {
 
 function App() {
   return (
-    <SessionProvider>
-      <Router>
-        <div className="App">
-          <header className="App-header">
-            <div className="header-content">
-              <Link to="/" className="logo">
-                <h1>LoL Match Analyzer</h1>
-              </Link>
-              <Navigation />
-              <SessionManager className="compact" />
-            </div>
-          </header>
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/champions" element={<ChampionsPage />} />
-              <Route path="/summoner" element={<SummonerPage />} />
-              <Route path="/analysis" element={<AnalysisPage />} />
-            </Routes>
-          </main>
-          
-          {/* Global Chatbot - available on all pages */}
-          <GlobalChatbot />
-        </div>
-      </Router>
-    </SessionProvider>
+    <LanguageProvider>
+      <SessionProvider>
+        <Router>
+          <div className="App">
+            <header className="App-header">
+              <div className="header-content">
+                <Link to="/" className="logo">
+                  <h1>LoL Match Analyzer</h1>
+                </Link>
+                <Navigation />
+                <div className="header-actions">
+                  <LanguageToggle />
+                  <SessionManager className="compact" />
+                </div>
+              </div>
+            </header>
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/champions" element={<ChampionsPage />} />
+                <Route path="/summoner" element={<SummonerPage />} />
+                <Route path="/analysis" element={<AnalysisPage />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </SessionProvider>
+    </LanguageProvider>
   );
 }
 

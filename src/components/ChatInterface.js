@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSession } from '../contexts/SessionContext';
+import { useTranslation } from '../hooks/useTranslation';
+import { renderMarkdown } from '../utils/markdownRenderer';
 import './ChatInterface.css';
 
 const ChatInterface = ({ 
@@ -8,12 +10,13 @@ const ChatInterface = ({
   onClose,
   isGlobal = false 
 }) => {
+  const { t } = useTranslation();
+  const { session } = useSession();
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
-  const { session } = useSession();
 
   useEffect(() => {
     // Generate session ID on component mount (33+ characters required)
@@ -49,13 +52,13 @@ const ChatInterface = ({
   const getWelcomeMessage = (type) => {
     switch (type) {
       case 'champion':
-        return '안녕하세요! 챔피언에 대해 궁금한 것이 있으시면 언제든 물어보세요. 빌드, 스킬 순서, 플레이 팁 등 무엇이든 도와드릴게요! 🎮';
+        return t('chat.welcome.champion');
       case 'match':
-        return '매치 분석을 도와드릴게요! 게임에서의 성과나 개선점에 대해 궁금한 점이 있으시면 말씀해주세요. 📊';
+        return t('chat.welcome.match');
       case 'trend':
-        return '플레이 성향 분석을 시작해볼까요? 최근 게임들의 패턴이나 개선 방향에 대해 분석해드릴 수 있어요! 📈';
+        return t('chat.welcome.trend');
       default:
-        return '안녕하세요! 리그오브레전드에 대해 무엇이든 물어보세요. 챔피언 공략, 매치 분석, 플레이 팁 등 도움이 필요한 것이 있으면 언제든 말씀해주세요! ⚡';
+        return t('chat.welcome.general');
     }
   };
 
@@ -132,45 +135,39 @@ const ChatInterface = ({
   };
 
   const formatMessage = (content) => {
-    // Simple formatting for better readability
-    return content
-      .split('\n')
-      .map((line, index) => (
-        <div key={index} className="message-line">
-          {line}
-        </div>
-      ));
+    // Use markdown renderer for rich text formatting
+    return renderMarkdown(content);
   };
 
   const getSuggestedQuestions = () => {
     switch (contextType) {
       case 'champion':
         return [
-          '이 챔피언의 추천 빌드는?',
-          '스킬 순서는 어떻게 해야 하나요?',
-          '라인전에서 주의할 점은?',
-          '팀파이트에서의 역할은?'
+          t('chat.suggestions.champion.q1'),
+          t('chat.suggestions.champion.q2'),
+          t('chat.suggestions.champion.q3'),
+          t('chat.suggestions.champion.q4')
         ];
       case 'match':
         return [
-          '이 게임에서 잘한 점은?',
-          '개선할 점이 있다면?',
-          'KDA가 낮은 이유는?',
-          '아이템 빌드는 적절했나요?'
+          t('chat.suggestions.match.q1'),
+          t('chat.suggestions.match.q2'),
+          t('chat.suggestions.match.q3'),
+          t('chat.suggestions.match.q4')
         ];
       case 'trend':
         return [
-          '최근 성과는 어떤가요?',
-          '주로 하는 챔피언 분석해주세요',
-          '플레이 스타일의 특징은?',
-          '어떤 점을 개선하면 좋을까요?'
+          t('chat.suggestions.trend.q1'),
+          t('chat.suggestions.trend.q2'),
+          t('chat.suggestions.trend.q3'),
+          t('chat.suggestions.trend.q4')
         ];
       default:
         return [
-          '추천 챔피언이 있나요?',
-          '최근 메타는 어떤가요?',
-          '실력 향상 팁을 알려주세요',
-          '포지션별 특징을 설명해주세요'
+          t('chat.suggestions.general.q1'),
+          t('chat.suggestions.general.q2'),
+          t('chat.suggestions.general.q3'),
+          t('chat.suggestions.general.q4')
         ];
     }
   };
@@ -220,7 +217,7 @@ const ChatInterface = ({
 
       {messages.length === 1 && (
         <div className="suggested-questions">
-          <p>이런 질문들을 해보세요:</p>
+          <p>{t('chat.suggestedQuestions')}</p>
           <div className="question-buttons">
             {getSuggestedQuestions().map((question, index) => (
               <button
@@ -242,7 +239,7 @@ const ChatInterface = ({
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder="메시지를 입력하세요..."
+            placeholder={t('chat.placeholder')}
             disabled={isLoading}
             className="chat-input"
           />

@@ -224,6 +224,7 @@ def extract_player_stats(match_data, puuid):
             'queueId': match_data['info']['queueId'],
             'championName': player_data['championName'],
             'championId': player_data['championId'],
+            'champLevel': player_data['champLevel'],
             'teamPosition': player_data['teamPosition'],
             'individualPosition': player_data['individualPosition'],
             'kills': player_data['kills'],

@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import ChatInterface from './ChatInterface';
+import { getChampionImageUrl, getItemImageUrl } from '../utils/imageUtils';
+import { getLocalizedChampionName } from '../services/championService';
+import { useTranslation } from '../hooks/useTranslation';
 import './MatchCard.css';
 
-const MatchCard = ({ match, onAnalyze, summonerName }) => {
+const MatchCard = ({ match, onAnalyze, summonerName, championData }) => {
+  const { t } = useTranslation();
   const [showAnalysis, setShowAnalysis] = useState(false);
   const {
     championName,
@@ -18,6 +22,11 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
     items = [],
     gameCreation
   } = match;
+
+  // Get localized champion name
+  const localizedChampionName = championData 
+    ? getLocalizedChampionName(championName, championData)
+    : championName;
 
   // Format game duration
   const formatDuration = (seconds) => {
@@ -50,7 +59,7 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
       <div className="match-header">
         <div className="match-result">
           <span className={`result-text ${win ? 'victory' : 'defeat'}`}>
-            {win ? '승리' : '패배'}
+            {win ? t('match.victory') : t('match.defeat')}
           </span>
           <span className="game-mode">{gameMode}</span>
         </div>
@@ -62,8 +71,22 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
 
       <div className="match-content">
         <div className="champion-info">
-          <div className="champion-name">{championName}</div>
-          <div className="champion-level">레벨 {match.champLevel || '?'}</div>
+          <div className="champion-avatar-container">
+            <img 
+              src={getChampionImageUrl(championName)} 
+              alt={localizedChampionName}
+              className="champion-avatar"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div className="champion-avatar-placeholder" style={{ display: 'none' }}>
+              {localizedChampionName.charAt(0)}
+            </div>
+            <div className="champion-level-badge">{match.champLevel || '?'}</div>
+          </div>
+          <div className="champion-name">{localizedChampionName}</div>
         </div>
 
         <div className="match-stats">
@@ -82,15 +105,15 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
 
           <div className="performance-stats">
             <div className="stat-item">
-              <span className="stat-label">데미지</span>
+              <span className="stat-label">{t('match.damage')}</span>
               <span className="stat-value">{formatNumber(totalDamageDealtToChampions)}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">골드</span>
+              <span className="stat-label">{t('match.gold')}</span>
               <span className="stat-value">{formatNumber(goldEarned)}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">시야</span>
+              <span className="stat-label">{t('match.vision')}</span>
               <span className="stat-value">{visionScore}</span>
             </div>
           </div>
@@ -101,20 +124,28 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
             {items.slice(0, 6).map((itemId, index) => (
               <div key={index} className="item-slot">
                 {itemId > 0 ? (
-                  <div className="item" title={`Item ${itemId}`}>
-                    {itemId}
-                  </div>
+                  <img 
+                    src={getItemImageUrl(itemId)} 
+                    alt={`Item ${itemId}`}
+                    className="item-image"
+                    title={`Item ${itemId}`}
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
                 ) : (
-                  <div className="empty-item"></div>
+                  <div className="empty-item-slot"></div>
                 )}
               </div>
             ))}
           </div>
           {items[6] > 0 && (
             <div className="trinket-slot">
-              <div className="trinket" title={`Trinket ${items[6]}`}>
-                {items[6]}
-              </div>
+              <img 
+                src={getItemImageUrl(items[6])} 
+                alt={`Trinket ${items[6]}`}
+                className="trinket-image"
+                title={`Trinket ${items[6]}`}
+                onError={(e) => e.target.style.display = 'none'}
+              />
             </div>
           )}
         </div>
@@ -127,9 +158,9 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
             e.preventDefault();
             setShowAnalysis(!showAnalysis);
           }}
-          title="이 게임을 상세 분석합니다"
+          title={showAnalysis ? t('match.closeAnalysis') : t('match.analyze')}
         >
-          {showAnalysis ? '분석 닫기' : 'AI 분석'}
+          {showAnalysis ? t('match.closeAnalysis') : t('match.analyze')}
         </button>
         {onAnalyze && (
           <button 
@@ -138,9 +169,9 @@ const MatchCard = ({ match, onAnalyze, summonerName }) => {
               e.preventDefault();
               onAnalyze(match);
             }}
-            title="상세 매치 정보를 봅니다"
+            title={t('match.detail')}
           >
-            상세보기
+            {t('match.detail')}
           </button>
         )}
       </div>

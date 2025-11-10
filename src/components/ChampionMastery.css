@@ -1,0 +1,298 @@
+/* Champion Mastery Container */
+.champion-mastery-container {
+  background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.champion-mastery-container h2 {
+  color: #c8aa6e;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 2px solid #c8aa6e;
+  padding-bottom: 0.75rem;
+}
+
+/* Mastery Summary Stats */
+.mastery-summary {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(200, 170, 110, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(200, 170, 110, 0.2);
+  flex: 1;
+  min-width: 150px;
+}
+
+.summary-stat .stat-label {
+  color: #a09b8c;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-stat .stat-value {
+  color: #c8aa6e;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Mastery Grid */
+.mastery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Mastery Card */
+.mastery-card {
+  background: rgba(15, 20, 25, 0.8);
+  border: 1px solid rgba(200, 170, 110, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.mastery-card:hover {
+  transform: translateY(-4px);
+  border-color: #c8aa6e;
+  box-shadow: 0 6px 12px rgba(200, 170, 110, 0.2);
+  background: rgba(15, 20, 25, 0.95);
+}
+
+/* Champion Image Container */
+.mastery-champion-image-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.mastery-champion-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #c8aa6e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.mastery-champion-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c8aa6e 0%, #8b7355 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #0f1419;
+  border: 3px solid #c8aa6e;
+}
+
+/* Mastery Level Badge */
+.mastery-level-badge {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, #c8aa6e 0%, #8b7355 100%);
+  color: #0f1419;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: 2px solid #0f1419;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Mastery Info */
+.mastery-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.mastery-name {
+  color: #f0e6d2;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  word-break: break-word;
+}
+
+.mastery-points {
+  color: #c8aa6e;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Loading State */
+.mastery-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(200, 170, 110, 0.2);
+  border-top-color: #c8aa6e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mastery-loading p {
+  color: #a09b8c;
+  font-size: 1rem;
+}
+
+/* Error State */
+.mastery-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.retry-button {
+  background: linear-gradient(135deg, #c8aa6e 0%, #8b7355 100%);
+  color: #0f1419;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(200, 170, 110, 0.3);
+}
+
+.retry-button:active {
+  transform: translateY(0);
+}
+
+/* Empty State */
+.mastery-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.mastery-empty p {
+  color: #a09b8c;
+  font-size: 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .champion-mastery-container {
+    padding: 1.5rem;
+  }
+
+  .champion-mastery-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .mastery-summary {
+    gap: 1rem;
+  }
+
+  .summary-stat {
+    padding: 0.75rem 1rem;
+    min-width: 120px;
+  }
+
+  .summary-stat .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .mastery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .mastery-champion-image-container {
+    width: 64px;
+    height: 64px;
+  }
+
+  .mastery-level-badge {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+
+  .mastery-name {
+    font-size: 0.875rem;
+  }
+
+  .mastery-points {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mastery-summary {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .summary-stat {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mastery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+}

@@ -46,9 +46,12 @@ Resources:
     Properties:
       FunctionName: fetch-champion-mastery
       CodeUri: ../lambda/
-      Handler: fetch-champion-mastery.lambda_handler
+      Handler: get-mastery-data.lambda_handler
       Runtime: python3.13
       Timeout: 30
+      Policies:
+        - S3ReadPolicy:
+            BucketName: rift-rewind-match-data-doyaji
       Events:
         Api:
           Type: HttpApi

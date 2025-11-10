@@ -1,0 +1,245 @@
+{
+  "nav": {
+    "home": "Home",
+    "champions": "Champions",
+    "summoner": "Summoner Search",
+    "analysis": "Match Analysis"
+  },
+  "home": {
+    "title": "Welcome to LoL Match Analyzer",
+    "subtitle": "AI-Powered League of Legends Match Analysis Tool",
+    "description": "Collect summoner game data and analyze with AI to help improve your skills.",
+    "features": {
+      "title": "Key Features",
+      "summoner": {
+        "title": "Summoner Search",
+        "description": "Search summoners by Riot ID and check recent match history."
+      },
+      "champion": {
+        "title": "Champion Info",
+        "description": "View stats, skills, and build information for all champions."
+      },
+      "analysis": {
+        "title": "AI Analysis",
+        "description": "AI analyzes game data and suggests improvements."
+      },
+      "mastery": {
+        "title": "Champion Mastery",
+        "description": "Check mastery levels for champions you've played."
+      }
+    },
+    "getStarted": "Get Started"
+  },
+  "champions": {
+    "title": "Champion Information",
+    "description": "View stats, skills, and build information for all champions.",
+    "search": "Search champion name...",
+    "difficulty": "Difficulty:",
+    "filter": {
+      "all": "All",
+      "assassin": "Assassin",
+      "fighter": "Fighter",
+      "mage": "Mage",
+      "marksman": "Marksman",
+      "support": "Support",
+      "tank": "Tank",
+      "role": "Role",
+      "lane": "Lane",
+      "search": "Search",
+      "clearFilters": "Clear Filters"
+    },
+    "lanes": {
+      "top": "Top",
+      "jungle": "Jungle",
+      "mid": "Mid",
+      "adc": "ADC",
+      "support": "Support"
+    },
+    "loading": "Loading champion data...",
+    "noResults": "No champions match your search criteria.",
+    "error": "Showing temporary data",
+    "modal": {
+      "info": "Info",
+      "aiGuide": "AI Guide",
+      "stats": "Base Stats",
+      "attack": "Attack",
+      "defense": "Defense",
+      "magic": "Magic",
+      "difficulty": "Difficulty",
+      "skills": "Skills",
+      "lore": "Lore"
+    }
+  },
+  "summoner": {
+    "title": "Summoner Search",
+    "placeholder": "Summoner#TAG (e.g., Hide on bush#KR1)",
+    "search": "Search",
+    "searching": "Collecting...",
+    "retry": "Retry",
+    "regions": {
+      "kr": "Korea (KR)",
+      "na1": "North America (NA)",
+      "euw1": "Europe West (EUW)",
+      "eun1": "Europe Nordic & East (EUNE)",
+      "jp1": "Japan (JP)",
+      "br1": "Brazil (BR)",
+      "la1": "Latin America North (LAN)",
+      "la2": "Latin America South (LAS)",
+      "oc1": "Oceania (OCE)",
+      "tr1": "Turkey (TR)",
+      "ru": "Russia (RU)"
+    },
+    "validation": {
+      "formatError": "Please enter in Summoner#TAG format (e.g., Hide on bush#KR1)",
+      "emptyFields": "Please enter both game name and tag",
+      "lengthError": "Game name cannot exceed 16 characters, tag cannot exceed 5 characters"
+    },
+    "errors": {
+      "collectionFailed": "Failed to collect data",
+      "sessionCreationFailed": "Failed to create session. Please check your browser settings.",
+      "sessionCreationError": "Session creation error: ",
+      "searchError": "An error occurred during search"
+    },
+    "matchCount": {
+      "5": "5 Games",
+      "10": "10 Games",
+      "15": "15 Games",
+      "20": "20 Games"
+    },
+    "status": {
+      "title": "Data Collection Status",
+      "matchHistory": "Match History",
+      "mastery": "Mastery",
+      "success": "Complete",
+      "failed": "Failed"
+    },
+    "matches": {
+      "title": "Recent Match History",
+      "total": "Total Games",
+      "winRate": "Win Rate",
+      "record": "W/L",
+      "games": "Games"
+    },
+    "placeholder": {
+      "title": "Match History & Mastery Info",
+      "description": "Enter a summoner name to view:",
+      "items": [
+        "Recent match history (W/L, KDA, champions played)",
+        "Champion mastery information",
+        "Detailed analysis links for each game"
+      ]
+    }
+  },
+  "match": {
+    "victory": "Victory",
+    "defeat": "Defeat",
+    "kda": "KDA",
+    "damage": "Damage",
+    "gold": "Gold",
+    "vision": "Vision",
+    "analyze": "AI Analysis",
+    "closeAnalysis": "Close Analysis",
+    "detail": "Details"
+  },
+  "mastery": {
+    "title": "Champion Mastery",
+    "totalScore": "Total Mastery Score",
+    "totalChampions": "Champions Played",
+    "level7": "Level 7 Champions",
+    "points": "pts",
+    "loading": "Loading mastery data...",
+    "error": "Failed to load mastery data",
+    "noData": "No mastery data available"
+  },
+  "chat": {
+    "title": "LoL AI Assistant",
+    "minimize": "Minimize",
+    "open": "Open AI Chatbot",
+    "placeholder": "Type a message...",
+    "suggestedQuestions": "Try asking:",
+    "welcome": {
+      "general": "Hello! Ask me anything about League of Legends. Champion guides, match analysis, gameplay tips - I'm here to help! ⚡",
+      "champion": "Hello! Ask me anything about this champion. Builds, skill order, gameplay tips - I can help with it all! 🎮",
+      "match": "Let me help analyze your match! Ask me about your performance or areas for improvement. 📊",
+      "trend": "Let's analyze your playstyle! I can help identify patterns in your recent games and suggest improvements! 📈"
+    },
+    "suggestions": {
+      "champion": {
+        "q1": "What's the recommended build?",
+        "q2": "What's the skill order?",
+        "q3": "What should I watch out for in lane?",
+        "q4": "What's the role in teamfights?"
+      },
+      "match": {
+        "q1": "What did I do well?",
+        "q2": "What can I improve?",
+        "q3": "Why was my KDA low?",
+        "q4": "Was my item build appropriate?"
+      },
+      "trend": {
+        "q1": "How's my recent performance?",
+        "q2": "Analyze my most played champions",
+        "q3": "What's my playstyle like?",
+        "q4": "What should I improve?"
+      },
+      "general": {
+        "q1": "Any champion recommendations?",
+        "q2": "What's the current meta?",
+        "q3": "Give me tips to improve",
+        "q4": "Explain each position's characteristics"
+      }
+    }
+  },
+  "analysis": {
+    "title": "Match Analysis",
+    "description": "Analyze your game history in detail and find areas for improvement.",
+    "noSession": "To analyze, please first",
+    "summonerSearch": "search for a summoner",
+    "collectData": "to collect match data.",
+    "types": {
+      "single": {
+        "title": "Single Match Analysis",
+        "description": "Get detailed AI analysis for a specific game.",
+        "feature1": "Personal performance analysis",
+        "feature2": "Team contribution evaluation",
+        "feature3": "Improvement suggestions"
+      },
+      "trend": {
+        "title": "Playstyle Trends",
+        "description": "Analyze play patterns across multiple games.",
+        "feature1": "Preferred champion analysis",
+        "feature2": "Performance by position",
+        "feature3": "Time-based trends"
+      }
+    },
+    "comingSoon": "Coming Soon",
+    "preview": {
+      "title": "Analysis Example",
+      "gameSummary": "Game Summary",
+      "keyPoints": "Key Analysis Points",
+      "suggestions": "Improvement Suggestions"
+    }
+  },
+  "session": {
+    "loading": "Loading session...",
+    "error": "Session error",
+    "searchPrompt": "Please search for a summoner",
+    "currentSummoner": "Current summoner:",
+    "expires": "Session expires:",
+    "hoursAfter": "hours",
+    "minutesAfter": "minutes",
+    "language": "Language:",
+    "theme": "Theme:",
+    "changeSummoner": "Change Summoner",
+    "closeError": "Close error message",
+    "searchOther": "Search another summoner"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}

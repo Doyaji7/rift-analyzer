@@ -1,0 +1,47 @@
+.language-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(200, 170, 110, 0.3);
+  border-radius: 4px;
+  color: #c8aa6e;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.language-toggle:hover {
+  background: rgba(200, 170, 110, 0.1);
+  border-color: #c8aa6e;
+  transform: translateY(-1px);
+}
+
+.language-toggle:active {
+  transform: translateY(0);
+}
+
+.language-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.language-text {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .language-toggle {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .language-icon {
+    font-size: 1rem;
+  }
+}

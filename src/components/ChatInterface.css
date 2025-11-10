@@ -4,6 +4,7 @@
   height: 100%;
   background: #0f1419;
   overflow: hidden;
+  min-height: 0;
 }
 
 /* Global chat (플로팅 챗봇) 스타일 */
@@ -93,9 +94,9 @@
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   gap: 1rem;
   background: #0f1419;
+  min-height: 0;
 }
 
 .message {
@@ -227,6 +228,7 @@
   padding: 1rem 1.25rem;
   border-top: 1px solid #463714;
   background: #1e2328;
+  flex-shrink: 0;
 }
 
 .suggested-questions p {
@@ -270,6 +272,7 @@
   padding: 0.75rem;
   border-top: 2px solid #463714;
   background: #1e2328;
+  flex-shrink: 0;
 }
 
 .input-container {
@@ -384,4 +387,165 @@
     height: 40px;
     font-size: 16px;
   }
+}
+
+/* Markdown-specific styling for AI chat messages */
+.message-content h1 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #c89b3c;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid #c89b3c;
+  padding-bottom: 0.5rem;
+}
+
+.message-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #c89b3c;
+  margin-top: 0.875rem;
+  margin-bottom: 0.625rem;
+}
+
+.message-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #cdbe91;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.message-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+  color: #cdbe91;
+}
+
+.message-content ul {
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  list-style-type: disc;
+  color: #cdbe91;
+}
+
+.message-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  list-style-type: decimal;
+  color: #cdbe91;
+}
+
+.message-content li {
+  margin-bottom: 0.375rem;
+  line-height: 1.5;
+}
+
+.message-content code {
+  background-color: #0a0e11;
+  color: #c89b3c;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.message-content pre {
+  background-color: #0a0e11;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+  border: 1px solid #463714;
+}
+
+.message-content pre code {
+  background-color: transparent;
+  color: #cdbe91;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.message-content strong {
+  font-weight: bold;
+  color: #c89b3c;
+}
+
+.message-content em {
+  font-style: italic;
+  color: #cdbe91;
+}
+
+.message-content a {
+  color: #5b9bd5;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.message-content a:hover {
+  color: #84c5ff;
+}
+
+.message-content blockquote {
+  border-left: 4px solid #c89b3c;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 0.75rem;
+  color: #a09b8c;
+  font-style: italic;
+}
+
+.message-content hr {
+  border: none;
+  border-top: 1px solid #463714;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.message-content table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #cdbe91;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  display: block;
+}
+
+.message-content thead {
+  background-color: #1e2328;
+  border-bottom: 2px solid #c89b3c;
+}
+
+.message-content tbody tr {
+  border-bottom: 1px solid #463714;
+}
+
+.message-content th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  color: #c89b3c;
+}
+
+.message-content td {
+  padding: 0.75rem;
+  text-align: left;
+}
+
+/* Ensure first element in message has no top margin */
+.message-content > *:first-child {
+  margin-top: 0;
+}
+
+/* Ensure last element in message has no bottom margin */
+.message-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Remove the old message-line styling since we're using markdown now */
+.message-content .message-line {
+  margin-bottom: 0;
+  min-height: auto;
 }
