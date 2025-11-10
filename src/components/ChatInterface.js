@@ -16,8 +16,10 @@ const ChatInterface = ({
   const { session } = useSession();
 
   useEffect(() => {
-    // Generate session ID on component mount
-    setSessionId(`chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+    // Generate session ID on component mount (33+ characters required)
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 15);
+    setSessionId(`s${timestamp}${random}`);
     
     // Add welcome message based on context
     const welcomeMessage = getWelcomeMessage(contextType);
@@ -101,12 +103,6 @@ const ChatInterface = ({
 
   const sendChatMessage = async (query) => {
     const { config, endpoints } = await import('../config/environment');
-    
-    // Ensure session ID is 33+ characters
-    let runtimeSessionId = sessionId;
-    if (runtimeSessionId.length < 33) {
-      runtimeSessionId = runtimeSessionId + 'x'.repeat(33 - runtimeSessionId.length);
-    }
 
     // Call API Gateway endpoint
     const response = await fetch(`${config.apiUrl}${endpoints.chat}`, {
@@ -116,7 +112,7 @@ const ChatInterface = ({
       },
       body: JSON.stringify({
         prompt: query,
-        sessionId: runtimeSessionId,
+        sessionId: sessionId,
         contextType: contextType,
         contextData: {
           ...contextData,
