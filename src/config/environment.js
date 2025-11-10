@@ -13,9 +13,7 @@ export const endpoints = {
   summonerSearch: '/summoner/search',
   summonerMatches: (riotId) => `/summoner/${encodeURIComponent(riotId)}/matches`,
   summonerMastery: (riotId) => `/summoner/${encodeURIComponent(riotId)}/mastery`,
-  matchAnalysis: '/analysis/match',
-  trendAnalysis: '/analysis/trend',
-  chat: '/chat'
+  chat: '/analysis'  // AgentCore proxy endpoint
 };
 
 // CloudFront CDN for LoL data
