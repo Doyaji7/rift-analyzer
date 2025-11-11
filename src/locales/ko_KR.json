@@ -217,7 +217,15 @@
       "title": "분석 예시",
       "gameSummary": "게임 요약",
       "keyPoints": "주요 분석 포인트",
-      "suggestions": "개선 제안"
+      "suggestions": "개선 제안",
+      "example": {
+        "gameMode": "ARAM - 아우렐리온 솔 (승리)",
+        "kda": "KDA: 11/11/25 (2.27:1)",
+        "point1": "팀파이트 기여도가 높았습니다 (딜량 1위)",
+        "point2": "포킹 스킬 적중률 개선이 필요합니다",
+        "point3": "아이템 빌드가 상황에 적합했습니다",
+        "suggestion": "Q 스킬의 정확도를 높이기 위해 적의 이동 패턴을 더 주의깊게 관찰해보세요."
+      }
     }
   },
   "session": {

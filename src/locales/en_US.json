@@ -217,7 +217,15 @@
       "title": "Analysis Example",
       "gameSummary": "Game Summary",
       "keyPoints": "Key Analysis Points",
-      "suggestions": "Improvement Suggestions"
+      "suggestions": "Improvement Suggestions",
+      "example": {
+        "gameMode": "ARAM - Aurelion Sol (Victory)",
+        "kda": "KDA: 11/11/25 (2.27:1)",
+        "point1": "High teamfight contribution (1st in damage)",
+        "point2": "Poke skill accuracy needs improvement",
+        "point3": "Item build was appropriate for the situation",
+        "suggestion": "To improve Q skill accuracy, pay closer attention to enemy movement patterns."
+      }
     }
   },
   "session": {

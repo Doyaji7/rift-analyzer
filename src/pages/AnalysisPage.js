@@ -57,18 +57,18 @@ const AnalysisPage = () => {
         <div className="preview-content">
           <div className="mock-analysis">
             <h4>📊 {t('analysis.preview.gameSummary')}</h4>
-            <p>ARAM - 아우렐리온 솔 (승리)</p>
-            <p>KDA: 11/11/25 (2.27:1)</p>
+            <p>{t('analysis.preview.example.gameMode')}</p>
+            <p>{t('analysis.preview.example.kda')}</p>
             
             <h4>🎯 {t('analysis.preview.keyPoints')}</h4>
             <ul>
-              <li>팀파이트 기여도가 높았습니다 (딜량 1위)</li>
-              <li>포킹 스킬 적중률 개선이 필요합니다</li>
-              <li>아이템 빌드가 상황에 적합했습니다</li>
+              <li>{t('analysis.preview.example.point1')}</li>
+              <li>{t('analysis.preview.example.point2')}</li>
+              <li>{t('analysis.preview.example.point3')}</li>
             </ul>
             
             <h4>💡 {t('analysis.preview.suggestions')}</h4>
-            <p>Q 스킬의 정확도를 높이기 위해 적의 이동 패턴을 더 주의깊게 관찰해보세요.</p>
+            <p>{t('analysis.preview.example.suggestion')}</p>
           </div>
         </div>
       </div>
